@@ -1,0 +1,1 @@
+﻿# IOT MyHome Settings

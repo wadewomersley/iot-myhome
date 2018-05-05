@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <AssemblyName>IOT_MyHome.Weather</AssemblyName>
+    <RootNamespace>IOT_MyHome.Weather</RootNamespace>
+    <Company>xcitestudios ltd</Company>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>bin\Debug\netcoreapp2.0\IOT_MyHome.Weather.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="" />
+  </Target>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\IOT-MyHome-Plugins\IOT-MyHome-Plugins.csproj" />
+    <ProjectReference Include="..\IOT-MyHome-Settings\IOT-MyHome-Settings.csproj" />
+  </ItemGroup>
+
+</Project>

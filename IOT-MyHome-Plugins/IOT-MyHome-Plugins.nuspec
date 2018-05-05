@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>$author$</authors>
+    <owners>$author$</owners>
+    <licenseUrl>https://github.com/xcitestudios/IOT-MyHome-Plugins/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/xcitestudios/IOT-MyHome-Plugins</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>$description$</description>
+    <releaseNotes/>
+    <copyright>Copyright 2018</copyright>
+    <tags>xcitestudios myhome iot plugins</tags>
+  </metadata>
+</package>

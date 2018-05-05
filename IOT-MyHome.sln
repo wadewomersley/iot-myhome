@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2020
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IOT-MyHome", "IOT-MyHome\IOT-MyHome.csproj", "{B407A3DD-2511-40F3-A9D4-2072F82F0350}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IOT-MyHome-Plugins", "IOT-MyHome-Plugins\IOT-MyHome-Plugins.csproj", "{E2AD12F5-AE9D-416D-B135-FB7F074F03CC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IOT-MyHome-Audio", "IOt-MyHome-Audio\IOT-MyHome-Audio.csproj", "{FBBCCD5D-1B30-4C9F-8E9F-0BB5B1C7A4BE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IOT-MyHome-Logging", "IOT-MyHome-Logging\IOT-MyHome-Logging.csproj", "{C2C5D84C-F31D-4FFE-B8DB-C0AA42C48F88}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IOT-MyHome-Settings", "IOT-MyHome-Settings\IOT-MyHome-Settings.csproj", "{33206B34-7532-4A88-9FAE-85C10FF1EF31}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IOT-MyHome-Weather", "IOT-MyHome-Weather\IOT-MyHome-Weather.csproj", "{FDB260AA-081E-4319-AF24-A4CDC11AE550}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B407A3DD-2511-40F3-A9D4-2072F82F0350}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B407A3DD-2511-40F3-A9D4-2072F82F0350}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B407A3DD-2511-40F3-A9D4-2072F82F0350}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B407A3DD-2511-40F3-A9D4-2072F82F0350}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E2AD12F5-AE9D-416D-B135-FB7F074F03CC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E2AD12F5-AE9D-416D-B135-FB7F074F03CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E2AD12F5-AE9D-416D-B135-FB7F074F03CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E2AD12F5-AE9D-416D-B135-FB7F074F03CC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FBBCCD5D-1B30-4C9F-8E9F-0BB5B1C7A4BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FBBCCD5D-1B30-4C9F-8E9F-0BB5B1C7A4BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FBBCCD5D-1B30-4C9F-8E9F-0BB5B1C7A4BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FBBCCD5D-1B30-4C9F-8E9F-0BB5B1C7A4BE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C2C5D84C-F31D-4FFE-B8DB-C0AA42C48F88}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C2C5D84C-F31D-4FFE-B8DB-C0AA42C48F88}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C2C5D84C-F31D-4FFE-B8DB-C0AA42C48F88}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C2C5D84C-F31D-4FFE-B8DB-C0AA42C48F88}.Release|Any CPU.Build.0 = Release|Any CPU
+		{33206B34-7532-4A88-9FAE-85C10FF1EF31}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{33206B34-7532-4A88-9FAE-85C10FF1EF31}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{33206B34-7532-4A88-9FAE-85C10FF1EF31}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{33206B34-7532-4A88-9FAE-85C10FF1EF31}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FDB260AA-081E-4319-AF24-A4CDC11AE550}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FDB260AA-081E-4319-AF24-A4CDC11AE550}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FDB260AA-081E-4319-AF24-A4CDC11AE550}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FDB260AA-081E-4319-AF24-A4CDC11AE550}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4F27A905-689D-4409-9BF2-643DBA761090}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <RootNamespace>IOT_MyHome.Plugins</RootNamespace>
+    <Company>xcitestudios ltd</Company>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <AssemblyName>IOT_MyHome.Plugins</AssemblyName>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>bin\Debug\netcoreapp2.0\IOT-MyHome-Plugins.xml</DocumentationFile>
+    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>bin\Release\netcoreapp2.0\IOT-MyHome-Plugins.xml</DocumentationFile>
+    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
+    <PackageReference Include="SharpCompress" Version="0.19.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\IOT-MyHome-Logging\IOT-MyHome-Logging.csproj" />
+    <ProjectReference Include="..\IOT-MyHome-Settings\IOT-MyHome-Settings.csproj" />
+  </ItemGroup>
+
+</Project>

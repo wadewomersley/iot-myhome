@@ -1,0 +1,14 @@
+[Unit]
+Description=IOT-MyHome
+After=network.target
+
+[Service]
+Type=simple
+User=pi
+WorkingDirectory=/software/IOT-MyHome
+ExecStart=/usr/bin/mono /software/IOT-MyHome/IOT_MyHome.exe
+Restart=on-abort
+
+
+[Install]
+WantedBy=multi-user.target
