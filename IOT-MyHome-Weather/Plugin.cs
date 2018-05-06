@@ -4,6 +4,7 @@
     using IOT_MyHome.Plugins;
     using IOT_MyHome.Settings;
     using System.Threading.Tasks;
+    using IOT_MyHome.Weather.Model.WeatherSource;
 
     /// <summary>
     /// Plays an audio file simply on loop.
@@ -48,7 +49,8 @@
         {
             await Task.Run(() =>
             {
-
+                //var map = new OpenWeatherMap("7bbeda36de70a65e69ca5cddc9082c9c");
+                //var forecast = map.GetForecast().Result;
             });
         }
 
