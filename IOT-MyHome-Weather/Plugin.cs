@@ -26,6 +26,8 @@
         /// </summary>
         public string Designation => "home-weather";
 
+        private Manager Manager;
+
         private StaticContentProvider StaticContentHandler;
 
         private RequestController Controller;
@@ -37,8 +39,9 @@
         /// <param name="pluginPath"></param>
         public Plugin(SettingsManager settingsManager, string pluginPath)
         {
+            Manager = new Manager(settingsManager);
             StaticContentHandler = new StaticContentProvider(pluginPath.TrimEnd('/') + "/IOT-MyHome-Weather-Assets.zip");
-            Controller = new RequestController();
+            Controller = new RequestController(Manager);
         }
 
         /// <summary>
@@ -71,6 +74,9 @@
             }
         }
 
+        /// <summary>
+        /// Dispose.
+        /// </summary>
         public void Dispose()
         {
 

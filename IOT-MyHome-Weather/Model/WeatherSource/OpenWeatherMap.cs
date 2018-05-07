@@ -12,18 +12,25 @@
     internal class OpenWeatherMap
     {
         private string AppId;
-        private const string SourceUrl = "http://api.openweathermap.org/data/2.5/forecast?id=2633352&units=metric&APPID=";
+        private const string SourceUrl = "http://api.openweathermap.org/data/2.5/forecast?id=%LOCATIONID%&units=metric&APPID=%APPID%";
 
-        public OpenWeatherMap(string appId)
+        public int LocationId { get; set; }
+
+        public OpenWeatherMap(string appId, int locationId)
         {
             AppId = appId;
+            LocationId = locationId;
         }
 
         public async Task<WeatherData> GetForecast()
         {
+            var url = SourceUrl;
+            url = url.Replace("%APPID%", AppId);
+            url = url.Replace("%LOCATIONID%", LocationId.ToString());
+
             using (var client = new HttpClient())
             {
-                using (var result = await client.GetAsync(SourceUrl + AppId))
+                using (var result = await client.GetAsync(url))
                 {
                     if (!result.IsSuccessStatusCode)
                     {
