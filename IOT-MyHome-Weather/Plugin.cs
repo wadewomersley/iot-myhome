@@ -27,6 +27,8 @@
 
         private StaticContentProvider StaticContentHandler;
 
+        private Manager Manager;
+
         private RequestController Controller;
 
         /// <summary>
@@ -37,6 +39,7 @@
         public Plugin(SettingsManager settingsManager, string pluginPath)
         {
             StaticContentHandler = new StaticContentProvider(pluginPath.TrimEnd('/') + "/IOT-MyHome-Weather-Assets.zip");
+            Manager = new Manager(settingsManager);
             Controller = new RequestController();
         }
 

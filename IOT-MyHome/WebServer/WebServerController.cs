@@ -17,19 +17,11 @@
 
         public void Configure(IApplicationBuilder app)
         {
-            app.UseAuthentication();
             app.Run(Handler);
         }
 
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            services.AddAuthentication(options =>
-                {
-                    options.DefaultAuthenticateScheme = "Basic Auth";
-                    options.DefaultChallengeScheme = "Basic Auth";
-                })
-                .AddCustomAuth(o => { });
-
             return services.BuildServiceProvider();
         }
     }

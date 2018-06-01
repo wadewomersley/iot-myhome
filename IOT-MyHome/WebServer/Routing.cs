@@ -80,7 +80,7 @@
                 requestTarget = parts.IndexOf('/') > -1 ? parts.Substring(0, parts.IndexOf('/')) : parts;
                 parts = requestTarget.Length + 1 < parts.Length ? parts.Substring(requestTarget.Length + 1) : "";
 
-                if (requestTarget.Length == 0)
+                if (requestTarget == "plugins")
                 {
                     response = new Response(Plugins.Containers, HttpStatusCode.OK);
                 }

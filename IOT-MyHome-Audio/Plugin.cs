@@ -4,6 +4,7 @@
     using IOT_MyHome.Plugins;
     using IOT_MyHome.Settings;
     using ManagedBass;
+    using System.Threading;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -53,13 +54,14 @@
         /// <returns></returns>
         public async Task Start()
         {
-            await Task.Run(() =>
+            await Task.Run(async () =>
             {
                 Player.SetVolume(Manager.GetStartupVolume());
 
                 if (Manager.GetStartupFile() != null)
                 {
-                    Player.SetFileName(Manager.GetStartupFile());
+                    Thread.Sleep(2000);
+                    await Player.SetFileName(Manager.GetStartupFile());
                 }
             });
         }

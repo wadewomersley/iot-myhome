@@ -30,6 +30,8 @@
     <ProjectReference Include="..\IOt-MyHome-Audio\IOT-MyHome-Audio.csproj" />
     <ProjectReference Include="..\IOT-MyHome-Logging\IOT-MyHome-Logging.csproj" />
     <ProjectReference Include="..\IOT-MyHome-Plugins\IOT-MyHome-Plugins.csproj" />
+    <ProjectReference Include="..\IOT-MyHome-Settings\IOT-MyHome-Settings.csproj" />
+    <ProjectReference Include="..\IOT-MyHome-Weather\IOT-MyHome-Weather.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -85,6 +87,6 @@
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="xcopy /Y &quot;$(SolutionDir)IOT-MyHome-Audio\bin\$(ConfigurationName)\netcoreapp2.0\netcoreapp2.0\IOT-MyHome-Audio-Assets.zip&quot; &quot;$(OutDir)&quot;" />
+    <Exec Command="xcopy /Y &quot;$(SolutionDir)IOT-MyHome-Audio\bin\$(ConfigurationName)\netcoreapp2.0\IOT-MyHome-Audio-Assets.zip&quot; &quot;$(OutDir)&quot;&#xD;&#xA;xcopy /Y &quot;$(SolutionDir)IOT-MyHome-Weather\bin\$(ConfigurationName)\netcoreapp2.0\IOT-MyHome-Weather-Assets.zip&quot; &quot;$(OutDir)&quot;" />
   </Target>
 </Project>

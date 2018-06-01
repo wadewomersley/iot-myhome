@@ -11,7 +11,7 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>bin\Debug\netcoreapp2.0\</OutputPath>
-    <DocumentationFile>bin\Debug\netcoreapp2.0\netcoreapp2.0\IOT-MyHome-Audio.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\netcoreapp2.0\IOT-MyHome-Audio.xml</DocumentationFile>
     <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
   </PropertyGroup>
 

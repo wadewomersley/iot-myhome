@@ -3,10 +3,12 @@
     using System;
     using ManagedBass;
     using System.Diagnostics.Contracts;
+    using System.Threading.Tasks;
 
     class Player
     {
         private MediaPlayer MPlayer;
+        private int Volume = 100;
 
         internal Player(string location)
         {
@@ -17,7 +19,7 @@
             };
         }
 
-        internal async void SetFileName(string filename)
+        internal async Task SetFileName(string filename)
         {
             if (filename == null)
             {
@@ -28,6 +30,7 @@
             {
                 await MPlayer.LoadAsync(filename);
                 MPlayer.Play();
+                SetVolume(Volume);
             }
             catch (Exception)
             {
@@ -42,6 +45,7 @@
         {
             Contract.Requires(vol >= 0 && vol <= 100, "Volume must be between 0 and 100");
 
+            Volume = vol;
             MPlayer.Volume = (double)vol / 100;
         }
     }
