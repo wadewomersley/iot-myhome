@@ -2,9 +2,7 @@
 {
     using IOT_MyHome.Weather.Model.JsonObjects;
     using Newtonsoft.Json;
-    using Newtonsoft.Json.Linq;
     using System;
-    using System.Collections.Generic;
     using System.Dynamic;
     using System.Net.Http;
     using System.Threading.Tasks;
@@ -13,6 +11,9 @@
     {
         private string AppId;
         private const string SourceUrl = "http://api.openweathermap.org/data/2.5/forecast?id=%LOCATIONID%&units=metric&APPID=%APPID%";
+
+        private WeatherData LastResponse = null;
+        private DateTime NextRequest = DateTime.Now;
 
         public int LocationId { get; set; }
 
@@ -24,6 +25,11 @@
 
         public async Task<WeatherData> GetForecast()
         {
+            if (DateTime.Now < NextRequest && LastResponse != null)
+            {
+                return LastResponse;
+            }
+
             var url = SourceUrl;
             url = url.Replace("%APPID%", AppId);
             url = url.Replace("%LOCATIONID%", LocationId.ToString());
@@ -65,6 +71,9 @@
                             WindSpeed = item.wind.speed
                         });
                     }
+
+                    LastResponse = ret;
+                    NextRequest = DateTime.Now.Add(TimeSpan.FromMinutes(15));
 
                     return ret;
                 }
