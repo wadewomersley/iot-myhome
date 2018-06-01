@@ -5,5 +5,14 @@
     /// </summary>
     internal sealed class Settings
     {
+        /// <summary>
+        /// APPID for OpenWeatherMap
+        /// </summary>
+        public string OpenWeatherMapAppId { get; set; }
+
+        /// <summary>
+        /// Location for OpenWeatherMap
+        /// </summary>
+        public int OpenWeatherMapLocation { get; set; }
     }
 }

@@ -15,7 +15,7 @@
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <Exec Command="powershell Compress-Archive -Path '$(ProjectDir)/Assets/*' -DestinationPath '$(OutDir)/IOT-MyHome-Weather-Assets.zip' -Force" />
   </Target>
-
+  
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
   </ItemGroup>
@@ -24,5 +24,9 @@
     <ProjectReference Include="..\IOT-MyHome-Plugins\IOT-MyHome-Plugins.csproj" />
     <ProjectReference Include="..\IOT-MyHome-Settings\IOT-MyHome-Settings.csproj" />
   </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="powershell Compress-Archive -Path '$(ProjectDir)/Assets/*' -DestinationPath '$(OutDir)/IOT-MyHome-Weather-Assets.zip' -Force" />
+  </Target>
 
 </Project>

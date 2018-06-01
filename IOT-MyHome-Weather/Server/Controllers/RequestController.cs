@@ -14,11 +14,13 @@
     /// </summary>
     internal class RequestController
     {
+        private Manager Manager;
         private ILogger Logger;
 
-        internal RequestController()
+        internal RequestController(Manager manager)
         {
             Logger = Logging.Logger.GetLogger<RequestController>();
+            Manager = manager;
         }
 
         internal T GetObject<T>(byte[] json)
@@ -44,26 +46,27 @@
             });
         }
 
-        private IResponse GetLatest()
+        private async Task<IResponse> GetLatest()
         {
             Logger.LogDebug("Getting latest weather");
-            
-            var data = new WeatherData()
-            {
-            };
 
-            return new Response(data);
+            return new Response(await Manager.GetLatest());
         }
 
-        internal IResponse GetSettings()
+        internal async Task<IResponse> GetSettings()
         {
-            Logger.LogDebug("Getting settings");
-
-            var settings = new Settings()
+            return await Task.Run(() =>
             {
-            };
+                Logger.LogDebug("Getting settings");
 
-            return new Response(settings);
+                var settings = new Settings()
+                {
+                    OpenWeatherMapAppId = Manager.GetOpenWeatherMapAppID(),
+                    OpenWeatherMapLocation = Manager.GetOpenWeatherMapLocation(),
+                };
+
+                return new Response(settings);
+            });
         }
     }
 }

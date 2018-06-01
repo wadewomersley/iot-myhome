@@ -4,6 +4,7 @@
     using IOT_MyHome.Plugins;
     using IOT_MyHome.Settings;
     using System.Threading.Tasks;
+    using IOT_MyHome.Weather.Model.WeatherSource;
 
     /// <summary>
     /// Plays an audio file simply on loop.
@@ -24,7 +25,7 @@
         /// Namespace designation for API requests.
         /// </summary>
         public string Designation => "home-weather";
-
+        
         private StaticContentProvider StaticContentHandler;
 
         private Manager Manager;
@@ -38,9 +39,9 @@
         /// <param name="pluginPath"></param>
         public Plugin(SettingsManager settingsManager, string pluginPath)
         {
-            StaticContentHandler = new StaticContentProvider(pluginPath.TrimEnd('/') + "/IOT-MyHome-Weather-Assets.zip");
             Manager = new Manager(settingsManager);
-            Controller = new RequestController();
+            StaticContentHandler = new StaticContentProvider(pluginPath.TrimEnd('/') + "/IOT-MyHome-Weather-Assets.zip");
+            Controller = new RequestController(Manager);
         }
 
         /// <summary>
@@ -51,7 +52,8 @@
         {
             await Task.Run(() =>
             {
-
+                //var map = new OpenWeatherMap("7bbeda36de70a65e69ca5cddc9082c9c");
+                //var forecast = map.GetForecast().Result;
             });
         }
 
@@ -72,6 +74,9 @@
             }
         }
 
+        /// <summary>
+        /// Dispose.
+        /// </summary>
         public void Dispose()
         {
 
