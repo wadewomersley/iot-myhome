@@ -1,0 +1,26 @@
+body {
+    background: #000;
+    color: #fff;
+}
+
+.forecast {
+    text-align: center;
+    font-size: 3em;
+}
+
+.forecast.forecast-large {
+    font-size: 4em;
+    margin: 0 0 40px 0;
+}
+
+.wind .wi {
+    margin: 0 5px;
+} 
+
+.wind .direction {
+    margin: 0 5px;
+}
+
+.wind .knots {
+    margin: 0 5px;
+}

@@ -33,82 +33,87 @@
 
         internal async Task<IResponse> Handle(IRequest request)
         {
+            Logger.LogDebug("Handling {0} request to {1}", request.Method, request.PathString);
+
+            switch (request.Path[1])
+            {
+                case "settings":
+                    return request.Method == "GET" ? await GetSettings() : null;
+                case "volume":
+                    return request.Method == "PUT" ? await SetVolume(GetObject<SetVolumeData>(request.Data)) : null;
+                case "play":
+                    return request.Method == "PUT" ? await SetFileToPlay(GetObject<SetPlayItem>(request.Data)) : null;
+                case "startupFile":
+                    return request.Method == "PUT" ? await SetStartupFile(GetObject<SetPlayItem>(request.Data)) : null;
+                case "playlist":
+                    return request.Method == "GET" ? new Response(await GetPlaylist()) : null;
+            }
+
+            return null;
+        }
+
+        private async Task<PlaylistData> GetPlaylist()
+        {
             return await Task.Run(() =>
             {
-                Logger.LogDebug("Handling {0} request to {1}", request.Method, request.PathString);
+                Logger.LogDebug("Getting playlist");
 
-                switch (request.Path[1])
-                {
-                    case "settings":
-                        return request.Method == "GET" ? GetSettings() : null;
-                    case "volume":
-                        return request.Method == "PUT" ? SetVolume(GetObject<SetVolumeData>(request.Data)) : null;
-                    case "play":
-                        return request.Method == "PUT" ? SetFileToPlay(GetObject<SetPlayItem>(request.Data)) : null;
-                    case "startupFile":
-                        return request.Method == "PUT" ? SetStartupFile(GetObject<SetPlayItem>(request.Data)) : null;
-                    case "playlist":
-                        return request.Method == "GET" ? new Response(GetPlaylist()) : null;
-                }
-
-                return null;
+                var fileList = Manager.GetFileList();
+                var files = fileList.Select(f => FileInformation.FromStorage(f.Replace("\\", "/"))).ToList();
+                return new PlaylistData() { Files = files.ToArray() };
             });
         }
 
-        private PlaylistData GetPlaylist()
+        internal async Task<IResponse> GetSettings()
         {
-            Logger.LogDebug("Getting playlist");
-
-            var fileList = Manager.GetFileList();
-            var files = fileList.Select(f => FileInformation.FromStorage(f.Replace("\\", "/"))).ToList();
-            return new PlaylistData() { Files = files.ToArray() };
-
-        }
-
-        internal IResponse GetSettings()
-        {
-            Logger.LogDebug("Getting settings");
-
-            var settings = new Settings()
+            return await Task.Run(() =>
             {
-                StartupFilename = Manager.GetStartupFile(),
-                Volume = Manager.GetStartupVolume(),
-                MusicFolder = Manager.GetMusicFolder(),
-            };
+                Logger.LogDebug("Getting settings");
 
-            return new Response(settings);
+                var settings = new Settings()
+                {
+                    StartupFilename = Manager.GetStartupFile(),
+                    Volume = Manager.GetStartupVolume(),
+                    MusicFolder = Manager.GetMusicFolder(),
+                };
+
+                return new Response(settings);
+            });
         }
 
-        internal IResponse SetVolume(SetVolumeData data)
+        internal async Task<IResponse> SetVolume(SetVolumeData data)
         {
-            Logger.LogDebug("Setting volume to {0}", data.Volume);
+            return await Task.Run(() =>
+            {
+                Logger.LogDebug("Setting volume to {0}", data.Volume);
 
-            Player.SetVolume(data.Volume);
-            Manager.SaveStartupVolume(data.Volume);
+                Player.SetVolume(data.Volume);
+                Manager.SaveStartupVolume(data.Volume);
 
-            return new Response(HttpStatusCode.NoContent);
+                return new Response(HttpStatusCode.NoContent);
+            });
         }
 
-        internal IResponse SetFileToPlay(SetPlayItem data)
+        internal async Task<IResponse> SetFileToPlay(SetPlayItem data)
         {
             if (data.Term == null)
             {
                 Logger.LogDebug("Disabling startup file");
 
-                Player.SetFileName(null);
+                await Player.SetFileName(null);
 
                 return new Response(HttpStatusCode.NoContent);
             }
 
             Logger.LogDebug("Finding file to play based on term {0}", data.Term);
 
-            var file = GetPlaylist().FindMatchingFile(data.Term);
+            var file = (await GetPlaylist()).FindMatchingFile(data.Term);
 
             if (file != null)
             {
                 Logger.LogDebug("Settings file to play to {0}", file.FileName);
 
-                Player.SetFileName(file.FileName);
+                await Player.SetFileName(file.FileName);
 
                 return new Response(HttpStatusCode.NoContent);
             }
@@ -120,7 +125,7 @@
             }
         }
 
-        internal IResponse SetStartupFile(SetPlayItem data)
+        internal async Task<IResponse> SetStartupFile(SetPlayItem data)
         {
 
             if (data.Term is null)
@@ -134,7 +139,7 @@
 
             Logger.LogDebug("Finding file to set as startup file based on term {0}", data.Term);
 
-            var file = GetPlaylist().FindMatchingFile(data.Term);
+            var file = (await GetPlaylist()).FindMatchingFile(data.Term);
 
             if (file != null)
             {

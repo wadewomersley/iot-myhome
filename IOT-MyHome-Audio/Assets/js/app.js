@@ -1,4 +1,4 @@
-(function(){    
+(function () {
     var playlistRowTemplate = '<div class="row"><div class="col-sm-9 fileContainer"></div><div class="col-sm-offset-0 col-sm-3 text-right optionsContainer"></div></div>';
     var serverSettings = {};
     var $playlist;
@@ -25,18 +25,18 @@
         e.preventDefault();
 
         sendChange('play', { Term: decodeURIComponent(this.title) });
-    };
+    }
 
     function changeStartupFile(e) {
         e.preventDefault();
 
         var inputs = $('input[type="checkbox"].startupFile');
         var displayName = this.value;
-		
+
         inputs.not(this).attr('checked', false);
 
         sendChange('startupFile', { term: this.checked ? displayName : null });
-    };
+    }
 
     function addPlaylistItem(file) {
         var $row = $(playlistRowTemplate);
@@ -52,7 +52,7 @@
         $link.attr('href', file.FileName);
         $link.attr('title', file.DisplayName);
         $link.text(file.SearchTerms.join(' / '));
-        
+
         $input.attr('checked', file.FileName === serverSettings.StartupFilename);
 
         $input.appendTo($label);
@@ -62,7 +62,7 @@
 
         $link.on('click', playLink);
         $input.on('change', changeStartupFile);
-    };
+    }
 
     $(document).ready(function () {
         $playlist = $('#playlist');
@@ -82,10 +82,10 @@
             });
         }).catch(function (error) {
             return;
-        });;
+        });
 
         $volume.on('change', function (e) {
             sendChange('volume', { Volume: parseInt($(this).val()) });
-        });;
+        });
     });
 })();

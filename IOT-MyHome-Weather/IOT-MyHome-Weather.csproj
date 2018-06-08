@@ -6,6 +6,7 @@
     <RootNamespace>IOT_MyHome.Weather</RootNamespace>
     <Company>xcitestudios ltd</Company>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <RunPostBuildEvent>Always</RunPostBuildEvent>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

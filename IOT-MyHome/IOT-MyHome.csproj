@@ -45,10 +45,7 @@
     <None Update="Assets\css\app.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\css\bootstrap.3.3.7.min.css">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Assets\css\bootstrap.3.3.7.min.css.map">
+    <None Update="Assets\css\bootstrap.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Assets\fonts\glyphicons-halflings-regular.eot">
@@ -72,13 +69,13 @@
     <None Update="Assets\js\app.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\js\axios.0.16.1.js">
+    <None Update="Assets\js\axios.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\js\bootstrap.3.3.7.min.js">
+    <None Update="Assets\js\bootstrap.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Assets\js\jquery.3.2.1.min.js">
+    <None Update="Assets\js\jquery.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Assets\js\polyfill.js">

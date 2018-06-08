@@ -14,5 +14,10 @@
         /// Location for OpenWeatherMap
         /// </summary>
         public int OpenWeatherMapLocation { get; set; }
+
+        /// <summary>
+        /// Formatting string for Date/Time's
+        /// </summary>
+        public string ForecastDateTimeFormat { get; set; } = "Do MMM, HH:mm";
     }
 }
