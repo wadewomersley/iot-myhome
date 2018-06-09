@@ -42,7 +42,7 @@
         /// <param name="pluginPath"></param>
         public Plugin(SettingsManager settingsManager, string pluginPath)
         {
-            StaticContentHandler = new StaticContentProvider(pluginPath.TrimEnd('/') + "/IOT-MyHome-Audio-Assets.zip");
+            StaticContentHandler = new StaticContentProvider(pluginPath.TrimEnd('/') + "/IOT-MyHome-Audio-Assets");
             Manager = new Manager(settingsManager);
             Player = new Player(pluginPath);
             Controller = new RequestController(Player, Manager);

@@ -52,12 +52,6 @@
         $('<time datetime="' + weatherInfo.DateTime + '">' + dateTime.format(serverSettings.ForecastDateTimeFormat) + '</time>')
             .appendTo($container);
 
-        $('<div class="pressure">' + Math.round(weatherInfo.PressureGround, 0) + 'hPa</div>')
-            .appendTo($container);
-
-        $('<div class="humidity">' + weatherInfo.Humidity + ' <i class="wi wi-humidity"/></div>')
-            .appendTo($container);
-
         var desc = weatherInfo.WeatherDescription;
         var icon = null;
         if (desc.indexOf('fog') > -1) {
@@ -85,10 +79,19 @@
         $('<div class="primary"><i class="wi wi-' + icon + '"/></div>')
             .appendTo($container);
 
+        $('<div class="temperature"><div class="low">' + Math.round(weatherInfo.TemperatureMin) + '&deg;<small><sup>C</sup></small></div><div class="high">' + Math.round(weatherInfo.TemperatureMax) + '&deg;<small><sup>C</sup></small></div></div>')
+            .appendTo($container);
+
         var windDirection = weatherInfo.WindDirection % 360;
         windDirection = Math.round(windDirection / 22.5, 0);
         var compassDir = windDirections[windDirection];
-        $('<div class="wind"><i class="wi wi-wind wi-from-' + compassDir.toLowerCase() + '"/><span class="direction">' + Math.round(weatherInfo.WindDirection, 0) + '&deg;</span><span class="knots">' + Math.round(weatherInfo.WindSpeed, 0) + 'kts</span></div>')
+        $('<div class="wind"><i class="wi wi-wind wi-from-' + compassDir.toLowerCase() + '"/><span class="direction">' + Math.round(weatherInfo.WindDirection) + '&deg;</span><span class="knots">' + Math.round(weatherInfo.WindSpeed) + 'kts</span></div>')
+            .appendTo($container);
+
+        $('<div class="pressure">' + Math.round(weatherInfo.PressureGround, 0) + 'hPa</div>')
+            .appendTo($container);
+
+        $('<div class="humidity">' + weatherInfo.Humidity + ' <i class="wi wi-humidity"/></div>')
             .appendTo($container);
     }
 
@@ -118,7 +121,7 @@
         });
     }
 
-    $(document).ready(function () {
+    $(function () {
         navigator.geolocation.getCurrentPosition(positionKnown);
     });
 })();

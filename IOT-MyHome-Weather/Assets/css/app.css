@@ -24,3 +24,25 @@ body {
 .wind .knots {
     margin: 0 5px;
 }
+
+.temperature {
+    width: 10%;
+    height: 0.1em;
+    background-color: #fff;
+    margin: 0.2em auto 0.6em auto;
+    position: relative;
+}
+
+    .temperature .low {
+        position: absolute;
+        left: -1.5em;
+        top: .1em;
+        font-size: 0.4em;
+    }
+
+    .temperature .high {
+        position: absolute;
+        right: -1.5em;
+        top: .1em;
+        font-size: 0.4em;
+    }

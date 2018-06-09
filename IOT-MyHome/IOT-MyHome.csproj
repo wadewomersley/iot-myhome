@@ -84,6 +84,6 @@
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="xcopy /Y &quot;$(SolutionDir)IOT-MyHome-Audio\bin\$(ConfigurationName)\netcoreapp2.0\IOT-MyHome-Audio-Assets.zip&quot; &quot;$(OutDir)&quot;&#xD;&#xA;xcopy /Y &quot;$(SolutionDir)IOT-MyHome-Weather\bin\$(ConfigurationName)\netcoreapp2.0\IOT-MyHome-Weather-Assets.zip&quot; &quot;$(OutDir)&quot;" />
+    <Exec Command="mkdir $(OutDir)IOT-MyHome-Audio-Assets&#xD;&#xA;xcopy &quot;$(SolutionDir)IOT-MyHome-Audio\bin\$(ConfigurationName)\netcoreapp2.0\Assets\*&quot; &quot;$(OutDir)IOT-MyHome-Audio-Assets&quot; /Y /E&#xD;&#xA;xcopy &quot;$(SolutionDir)IOT-MyHome-Audio\bin\$(ConfigurationName)\netcoreapp2.0\*bass*&quot; &quot;$(OutDir)&quot; /Y /E&#xD;&#xA;&#xD;&#xA;mkdir $(OutDir)IOT-MyHome-Weather-Assets&#xD;&#xA;xcopy &quot;$(SolutionDir)IOT-MyHome-Weather\bin\$(ConfigurationName)\netcoreapp2.0\Assets\*&quot; &quot;$(OutDir)IOT-MyHome-Weather-Assets&quot; /Y /E" />
   </Target>
 </Project>

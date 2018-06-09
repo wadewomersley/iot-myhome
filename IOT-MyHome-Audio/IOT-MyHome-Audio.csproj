@@ -2,22 +2,15 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
-    <RootNamespace>IOT_MyHome.Audio</RootNamespace>
     <AssemblyName>IOT_MyHome.Audio</AssemblyName>
+    <RootNamespace>IOT_MyHome.Audio</RootNamespace>
     <Company>xcitestudios ltd</Company>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <RunPostBuildEvent>Always</RunPostBuildEvent>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <OutputPath>bin\Debug\netcoreapp2.0\</OutputPath>
     <DocumentationFile>bin\Debug\netcoreapp2.0\IOT-MyHome-Audio.xml</DocumentationFile>
-    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>bin\Release\netcoreapp2.0\IOT-MyHome-Audio.xml</DocumentationFile>
-    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
   </PropertyGroup>
   
   <ItemGroup>
@@ -32,22 +25,17 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Assets\" />
-    <Folder Include="Properties\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Update="Assets\css\app.css">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Assets\index.html">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Assets\js\app.js">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Assets\js\debug.js">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="bass.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -56,9 +44,5 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="powershell Compress-Archive -Path '$(ProjectDir)/Assets/*' -DestinationPath '$(OutDir)/IOT-MyHome-Audio-Assets.zip' -Force" />
-  </Target>
 
 </Project>

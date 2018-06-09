@@ -40,7 +40,7 @@
         public Plugin(SettingsManager settingsManager, string pluginPath)
         {
             Manager = new Manager(settingsManager);
-            StaticContentHandler = new StaticContentProvider(pluginPath.TrimEnd('/') + "/IOT-MyHome-Weather-Assets.zip");
+            StaticContentHandler = new StaticContentProvider(pluginPath.TrimEnd('/') + "/IOT-MyHome-Weather-Assets");
             Controller = new RequestController(Manager);
         }
 
