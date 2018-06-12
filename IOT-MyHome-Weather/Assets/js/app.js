@@ -79,8 +79,16 @@
         $('<div class="primary"><i class="wi wi-' + icon + '"/></div>')
             .appendTo($container);
 
-        $('<div class="temperature"><div class="low">' + Math.round(weatherInfo.TemperatureMin) + '&deg;<small><sup>C</sup></small></div><div class="high">' + Math.round(weatherInfo.TemperatureMax) + '&deg;<small><sup>C</sup></small></div></div>')
-            .appendTo($container);
+        var tempMin = Math.round(weatherInfo.TemperatureMin);
+        var tempMax = Math.round(weatherInfo.TemperatureMax);
+
+        if (tempMin === tempMax) {
+            $('<div class="temperature fixed">' + tempMin + '&deg;<small><sup>C</sup></small></div>')
+                .appendTo($container);
+        } else {
+            $('<div class="temperature"><div class="low">' + tempMin + '&deg;<small><sup>C</sup></small></div><div class="high">' + tempMax + '&deg;<small><sup>C</sup></small></div></div>')
+                .appendTo($container);
+        }
 
         var windDirection = weatherInfo.WindDirection % 360;
         windDirection = Math.round(windDirection / 22.5, 0);

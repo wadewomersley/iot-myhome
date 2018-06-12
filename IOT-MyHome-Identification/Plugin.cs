@@ -1,10 +1,9 @@
-﻿namespace IOT_MyHome.Weather
+﻿namespace IOT_MyHome.Identification
 {
-    using IOT_MyHome.Weather.Controllers;
+    using IOT_MyHome.Identification.Controllers;
     using IOT_MyHome.Plugins;
     using IOT_MyHome.Settings;
     using System.Threading.Tasks;
-    using IOT_MyHome.Weather.Model.WeatherSource;
 
     /// <summary>
     /// Plays an audio file simply on loop.
@@ -14,17 +13,17 @@
         /// <summary>
         /// Friendly name for the plugin.
         /// </summary>
-        public string Name => "IOT-MyHome-Weather";
+        public string Name => "IOT-MyHome-Identification";
 
         /// <summary>
         /// Description about what the plugin does.
         /// </summary>
-        public string Description => "Weather stuff";
+        public string Description => "Identification stuff";
 
         /// <summary>
         /// Namespace designation for API requests.
         /// </summary>
-        public string Designation => "home-weather";
+        public string Designation => "home-identification";
         
         private StaticContentProvider StaticContentHandler;
 
@@ -40,7 +39,7 @@
         public Plugin(SettingsManager settingsManager, string pluginPath)
         {
             Manager = new Manager(settingsManager);
-            StaticContentHandler = new StaticContentProvider(pluginPath.TrimEnd('/') + "/IOT-MyHome-Weather-Assets");
+            StaticContentHandler = new StaticContentProvider(pluginPath.TrimEnd('/') + "/IOT-MyHome-Identification-Assets");
             Controller = new RequestController(Manager);
         }
 
@@ -52,6 +51,7 @@
         {
             await Task.Run(() =>
             {
+
             });
         }
 

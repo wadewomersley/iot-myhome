@@ -8,6 +8,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <StartupObject>IOT_MyHome.Program</StartupObject>
     <AssemblyName>IOT_MyHome</AssemblyName>
+    <RunPostBuildEvent>Always</RunPostBuildEvent>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -28,6 +29,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\IOt-MyHome-Audio\IOT-MyHome-Audio.csproj" />
+    <ProjectReference Include="..\IOT-MyHome-Identification\IOT-MyHome-Identification.csproj" />
     <ProjectReference Include="..\IOT-MyHome-Logging\IOT-MyHome-Logging.csproj" />
     <ProjectReference Include="..\IOT-MyHome-Plugins\IOT-MyHome-Plugins.csproj" />
     <ProjectReference Include="..\IOT-MyHome-Settings\IOT-MyHome-Settings.csproj" />

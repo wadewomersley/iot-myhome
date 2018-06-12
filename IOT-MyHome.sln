@@ -13,7 +13,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IOT-MyHome-Logging", "IOT-M
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IOT-MyHome-Settings", "IOT-MyHome-Settings\IOT-MyHome-Settings.csproj", "{33206B34-7532-4A88-9FAE-85C10FF1EF31}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IOT-MyHome-Weather", "IOT-MyHome-Weather\IOT-MyHome-Weather.csproj", "{FDB260AA-081E-4319-AF24-A4CDC11AE550}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IOT-MyHome-Weather", "IOT-MyHome-Weather\IOT-MyHome-Weather.csproj", "{FDB260AA-081E-4319-AF24-A4CDC11AE550}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IOT-MyHome-Identification", "IOT-MyHome-Identification\IOT-MyHome-Identification.csproj", "{EB23027D-63EA-43E8-893F-9F65BB66EFC5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{FDB260AA-081E-4319-AF24-A4CDC11AE550}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FDB260AA-081E-4319-AF24-A4CDC11AE550}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FDB260AA-081E-4319-AF24-A4CDC11AE550}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EB23027D-63EA-43E8-893F-9F65BB66EFC5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB23027D-63EA-43E8-893F-9F65BB66EFC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB23027D-63EA-43E8-893F-9F65BB66EFC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB23027D-63EA-43E8-893F-9F65BB66EFC5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
