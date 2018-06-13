@@ -9,13 +9,21 @@
     {
         public float RequiredSimilary { get; set; } = 75;
 
-        public IList<Person> People { get; set; }
+        public List<Person> People { get; set; } = new List<Person>();
 
         public int SleepInterval { get; set; } = 1000;
 
         public int SleepAfterMatchInterval { get; set; } = 5000;
 
         public int CaptureInterval { get; set; } = 1000;
+
+        public string AmazonRegion { get; set; } = "eu-west-1";
+
+        public string AmazonAccessKey { get; set; } = "";
+
+        public string AmazonSecretKey { get; set; } = "";
+
+        public string AmazonRekognitionCollection { get; set; } = "home-control";
     }
 
     /// <summary>

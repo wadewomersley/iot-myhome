@@ -86,6 +86,6 @@
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="mkdir $(OutDir)IOT-MyHome-Audio-Assets&#xD;&#xA;xcopy &quot;$(SolutionDir)IOT-MyHome-Audio\bin\$(ConfigurationName)\netcoreapp2.0\Assets\*&quot; &quot;$(OutDir)IOT-MyHome-Audio-Assets&quot; /Y /E&#xD;&#xA;xcopy &quot;$(SolutionDir)IOT-MyHome-Audio\bin\$(ConfigurationName)\netcoreapp2.0\*bass*&quot; &quot;$(OutDir)&quot; /Y /E&#xD;&#xA;&#xD;&#xA;mkdir $(OutDir)IOT-MyHome-Weather-Assets&#xD;&#xA;xcopy &quot;$(SolutionDir)IOT-MyHome-Weather\bin\$(ConfigurationName)\netcoreapp2.0\Assets\*&quot; &quot;$(OutDir)IOT-MyHome-Weather-Assets&quot; /Y /E" />
+    <Exec Command="mkdir $(OutDir)IOT-MyHome-Audio-Assets&#xD;&#xA;xcopy &quot;$(SolutionDir)IOT-MyHome-Audio\bin\$(ConfigurationName)\netcoreapp2.0\Assets\*&quot; &quot;$(OutDir)IOT-MyHome-Audio-Assets&quot; /Y /E&#xD;&#xA;xcopy &quot;$(SolutionDir)IOT-MyHome-Audio\bin\$(ConfigurationName)\netcoreapp2.0\*bass*&quot; &quot;$(OutDir)&quot; /Y /E&#xD;&#xA;&#xD;&#xA;mkdir $(OutDir)IOT-MyHome-Identification-Assets&#xD;&#xA;xcopy &quot;$(SolutionDir)IOT-MyHome-Identification\bin\$(ConfigurationName)\netcoreapp2.0\Assets\*&quot; &quot;$(OutDir)IOT-MyHome-Identification-Assets&quot; /Y /E&#xD;&#xA;&#xD;&#xA;mkdir $(OutDir)IOT-MyHome-Weather-Assets&#xD;&#xA;xcopy &quot;$(SolutionDir)IOT-MyHome-Weather\bin\$(ConfigurationName)\netcoreapp2.0\Assets\*&quot; &quot;$(OutDir)IOT-MyHome-Weather-Assets&quot; /Y /E" />
   </Target>
 </Project>

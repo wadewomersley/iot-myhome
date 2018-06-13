@@ -1,6 +1,8 @@
 ﻿namespace IOT_MyHome.Identification
 {
     using IOT_MyHome.Identification.Controllers;
+    using IOT_MyHome.Identification.Services;
+    using IOT_MyHome.Identification.Utilities;
     using IOT_MyHome.Plugins;
     using IOT_MyHome.Settings;
     using System.Threading.Tasks;
@@ -30,6 +32,8 @@
         private Manager Manager;
 
         private RequestController Controller;
+        private Camera Camera;
+        private FacialRecognition Recognition;
 
         /// <summary>
         /// Constructor.
@@ -49,9 +53,11 @@
         /// <returns></returns>
         public async Task Start()
         {
-            await Task.Run(() =>
+            await Task.Run(async () =>
             {
-
+                this.Camera = new Camera(Manager.GetCaptureInterval());
+                this.Recognition = new FacialRecognition(Manager, this.Camera);
+                await this.Recognition.Start();
             });
         }
 
