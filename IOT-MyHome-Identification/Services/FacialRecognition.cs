@@ -132,14 +132,7 @@
                         {
                             this.Logger.LogDebug("Seen person with no local information: {0}", match.Face.FaceId);
 
-                            this.Manager.AddPerson(new Person()
-                            {
-                                Name = "(unknown)",
-                                SpokenName = "someone",
-                                RemoteIDs = new List<string>() {
-                                    match.Face.FaceId
-                                }
-                            });
+                            this.AddDefaultPerson(match.Face, e.ImagePng);
 
                             return;
                         }
@@ -165,18 +158,47 @@
                     {
                         this.Logger.LogDebug("Recognised new person with remote ID {0}", faceRecord.Face.FaceId);
 
-                        this.Manager.AddPerson(new Person()
-                        {
-                            Name = "(unknown)",
-                            SpokenName = "someone",
-                            RemoteIDs = new List<string>() {
-                                faceRecord.Face.FaceId
-                            }
-                        });
+                        this.AddDefaultPerson(faceRecord.Face, e.ImagePng);
                     });
                 }
 
                 IgnoreUntil = (new DateTimeOffset(DateTime.UtcNow)).ToUnixTimeSeconds() + (this.Manager.GetSleepAfterMatchInterval() / 1000);
+            }
+        }
+
+        private void AddDefaultPerson(Face face, byte[] pngImage)
+        {
+
+            using (var outMs = new MemoryStream())
+            {
+                using (var ms = new MemoryStream(pngImage))
+                {
+                    var imageObject = FreeImageAPI.FreeImageBitmap.FromStream(ms);
+                    var left = (int)(face.BoundingBox.Left * imageObject.Width);
+                    var top = (int)(face.BoundingBox.Top * imageObject.Height);
+                    var width = (int)(face.BoundingBox.Width * imageObject.Width);
+                    var height = (int)(face.BoundingBox.Height * imageObject.Height);
+
+                    var right = Math.Max(0, imageObject.Width - width - left);
+                    var bottom = Math.Max(0, imageObject.Height - height - top);
+                    left = Math.Max(0, left);
+                    top = Math.Max(0, top);
+
+                    var faceImage = imageObject.Copy(left, top, right, bottom);
+                    faceImage.Save(outMs, FreeImageAPI.FREE_IMAGE_FORMAT.FIF_PNG);
+                }
+                outMs.Seek(0, SeekOrigin.Begin);
+
+                var buffer = new byte[outMs.Length];
+                outMs.Read(buffer, 0, (int)outMs.Length);
+
+                this.Manager.AddPerson(new Person()
+                {
+                    Name = "(unknown)",
+                    SpokenName = "someone",
+                    RemoteIDs = new List<string>() { face.FaceId },
+                    Image = buffer
+                });
             }
         }
     }
