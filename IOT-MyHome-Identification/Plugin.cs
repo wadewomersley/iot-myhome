@@ -59,6 +59,9 @@
                 this.Recognition = new FacialRecognition(Manager, this.Camera);
                 await this.Recognition.Start();
             });
+
+            this.Camera.Stop();
+
         }
 
         /// <summary>

@@ -47,7 +47,14 @@
 
                 capture.Read(image);
 
-                this.ImageCaptured?.Invoke(this, new ImageCapturedEventArgs(image.ToBytes(".bmp"), image.ToBytes(".png")));
+                if (image.Width == 0)
+                {
+                    break;
+                }
+
+                var bmp = image.ToBytes(".bmp");
+                var png = image.ToBytes(".png");
+                this.ImageCaptured?.Invoke(this, new ImageCapturedEventArgs(bmp, png));
 
                 Thread.Sleep(this.CaptureInterval);
             }

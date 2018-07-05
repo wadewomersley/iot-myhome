@@ -12,16 +12,18 @@ if (location.search.indexOf('DEBUG') > -1) {
                             ApiKey: "TESTTESTTEST"
                         }]);
                     } else if (args.url.indexOf('/playlist')) {
-                        resolve([{Files: [
-                            {
-                                FileName: "File One.mp3",
-                                DisplayName: "File One"
-                            },
-                            {
-                                FileName: "Another File.mp3",
-                                DisplayName: "Another File"
-                            }
-                        ]}])
+                        resolve([{
+                            Files: [
+                                {
+                                    FileName: "File One.mp3",
+                                    DisplayName: "File One"
+                                },
+                                {
+                                    FileName: "Another File.mp3",
+                                    DisplayName: "Another File"
+                                }
+                            ]
+                        }]);
                     }
                     break;
             }
