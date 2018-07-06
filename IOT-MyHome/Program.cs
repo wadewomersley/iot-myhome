@@ -24,7 +24,7 @@
             plugins.LoadPlugins();
 
             var router = new Routing(plugins, settingsManager);
-            var WebServerController = new WebServerStartup(router.Handler);
+            var WebServerController = new WebServerStartup(router.Handler, settingsManager);
 
             var host = new WebHostBuilder()
                 .ConfigureServices(services =>
