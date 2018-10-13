@@ -44,7 +44,9 @@
         {
             Manager = new Manager(settingsManager);
             StaticContentHandler = new StaticContentProvider(pluginPath.TrimEnd('/') + "/IOT-MyHome-Identification-Assets");
-            Controller = new RequestController(Manager);
+            Camera = new Camera(Manager.GetCaptureInterval());
+            Recognition = new FacialRecognition(Manager, this.Camera);
+            Controller = new RequestController(Manager, Recognition);
         }
 
         /// <summary>
@@ -55,13 +57,8 @@
         {
             await Task.Run(async () =>
             {
-                this.Camera = new Camera(Manager.GetCaptureInterval());
-                this.Recognition = new FacialRecognition(Manager, this.Camera);
                 await this.Recognition.Start();
             });
-
-            this.Camera.Stop();
-
         }
 
         /// <summary>

@@ -22,6 +22,11 @@
         private byte[] LastImage = null;
         private long IgnoreUntil = 0;
 
+        public byte[] LastImageCapturedPng
+        {
+            get; private set;
+        }
+
         public FacialRecognition(Manager manager, Camera camera)
         {
             this.Logger = Logging.Logger.GetLogger<FacialRecognition>();
@@ -80,6 +85,8 @@
 
             var bitmap = e.ImageBmp;
 
+            this.LastImageCapturedPng = e.ImagePng;
+
             var newImage = ImageHandling.ResizeImage(bitmap, 32, 32);
             newImage = ImageHandling.AverageBitmapColors(newImage);
 
@@ -89,7 +96,17 @@
                 return;
             }
 
-            var diff = ImageHandling.ImageDifference(LastImage, newImage);
+            double diff;
+
+            try
+            {
+                diff = ImageHandling.ImageDifference(LastImage, newImage);
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex.Message);
+                return;
+            }
 
             if (diff < 25)
             {
