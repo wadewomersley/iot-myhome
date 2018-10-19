@@ -122,6 +122,8 @@
             {
                 LastImage = newImage;
 
+                this.Logger.LogDebug("Sending image to Rekognition");
+
                 var searchRequest = new SearchFacesByImageRequest();
                 searchRequest.CollectionId = this.Manager.GetAmazonRekognitionCollection();
                 searchRequest.Image = new Image() { Bytes = ms };
@@ -170,7 +172,6 @@
                         var r2 = new DetectFacesRequest();
                         r2.Attributes = new List<string>() { "ALL" };
                         r2.Image = new Image() { Bytes = ms };
-                        var r2r = this.Rekognition.DetectFacesAsync(r2).Result;
                     });
                 }
                 else

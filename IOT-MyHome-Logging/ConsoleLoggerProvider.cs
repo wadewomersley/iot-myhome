@@ -1,0 +1,170 @@
+﻿namespace IOT_MyHome.Logging
+{
+    using System;
+
+    using System.Collections.Concurrent;
+
+    using System.Collections.Generic;
+
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.Logging;
+    using Microsoft.Extensions.Logging.Console;
+    using Microsoft.Extensions.Logging.Console.Internal;
+
+    internal class CustomConsoleLoggerProvider : ILoggerProvider
+    {
+        private readonly ConcurrentDictionary<string, CustomConsoleLogger> _loggers = new ConcurrentDictionary<string, CustomConsoleLogger>();
+
+        private readonly Func<string, LogLevel, bool> _filter;
+        private IConsoleLoggerSettings _settings;
+        private readonly ConsoleLoggerProcessor _messageQueue = new ConsoleLoggerProcessor();
+        private readonly bool _isLegacy;
+
+        private static readonly Func<string, LogLevel, bool> trueFilter = (cat, level) => true;
+        private static readonly Func<string, LogLevel, bool> falseFilter = (cat, level) => false;
+
+        [Obsolete("This method is obsolete and will be removed in a future version. The recommended alternative is Microsoft.Extensions.Logging.Console.ConsoleLoggerProvider(IConfiguration).")]
+        public CustomConsoleLoggerProvider(Func<string, LogLevel, bool> filter, bool includeScopes)
+        {
+            if (filter == null)
+            {
+                throw new ArgumentNullException(nameof(filter));
+            }
+
+            _filter = filter;
+            _settings = new ConsoleLoggerSettings()
+            {
+                IncludeScopes = includeScopes,
+            };
+
+            _isLegacy = true;
+        }
+
+        public CustomConsoleLoggerProvider(IConfiguration configuration)
+        {
+            if (configuration != null)
+            {
+                _settings = new ConfigurationConsoleLoggerSettings(configuration);
+
+                if (_settings.ChangeToken != null)
+                {
+                    _settings.ChangeToken.RegisterChangeCallback(OnConfigurationReload, null);
+                }
+            }
+            else
+            {
+                _settings = new ConsoleLoggerSettings();
+            }
+
+            _isLegacy = false;
+        }
+
+        [Obsolete("This method is obsolete and will be removed in a future version. The recommended alternative is Microsoft.Extensions.Logging.Console.ConsoleLoggerProvider(IConfiguration).")]
+        public CustomConsoleLoggerProvider(IConsoleLoggerSettings settings)
+        {
+            if (settings == null)
+            {
+                throw new ArgumentNullException(nameof(settings));
+            }
+
+            _settings = settings;
+
+            if (_settings.ChangeToken != null)
+            {
+                _settings.ChangeToken.RegisterChangeCallback(OnConfigurationReload, null);
+            }
+
+            _isLegacy = true;
+        }
+
+        private void OnConfigurationReload(object state)
+        {
+            try
+            {
+                // The settings object needs to change here, because the old one is probably holding on
+                // to an old change token.
+                _settings = _settings.Reload();
+
+                var includeScopes = _settings?.IncludeScopes ?? false;
+                foreach (var logger in _loggers.Values)
+                {
+                    if (_isLegacy)
+                    {
+                        logger.Filter = GetFilter(logger.Name, _settings);
+                    }
+                    logger.IncludeScopes = includeScopes;
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Console.WriteLine($"Error while loading configuration changes.{Environment.NewLine}{ex}");
+            }
+            finally
+            {
+                // The token will change each time it reloads, so we need to register again.
+                if (_settings?.ChangeToken != null)
+                {
+                    _settings.ChangeToken.RegisterChangeCallback(OnConfigurationReload, null);
+                }
+            }
+        }
+
+        public ILogger CreateLogger(string name)
+        {
+            return _loggers.GetOrAdd(name, CreateLoggerImplementation);
+        }
+
+        private CustomConsoleLogger CreateLoggerImplementation(string name)
+        {
+            return new CustomConsoleLogger(name, GetFilter(name, _settings), _settings?.IncludeScopes ?? false, _messageQueue);
+        }
+
+        private Func<string, LogLevel, bool> GetFilter(string name, IConsoleLoggerSettings settings)
+        {
+            // Filters are now handled in Logger.cs with the Configuration and AddFilter methods on LoggerFactory
+            if (!_isLegacy)
+            {
+                return trueFilter;
+            }
+
+            if (_filter != null)
+            {
+                return _filter;
+            }
+
+            if (settings != null)
+            {
+                foreach (var prefix in GetKeyPrefixes(name))
+                {
+                    LogLevel level;
+                    if (settings.TryGetSwitch(prefix, out level))
+                    {
+                        return (n, l) => l >= level;
+                    }
+                }
+            }
+
+            return falseFilter;
+        }
+
+        private IEnumerable<string> GetKeyPrefixes(string name)
+        {
+            while (!string.IsNullOrEmpty(name))
+            {
+                yield return name;
+                var lastIndexOfDot = name.LastIndexOf('.');
+                if (lastIndexOfDot == -1)
+                {
+                    yield return "Default";
+                    break;
+                }
+                name = name.Substring(0, lastIndexOfDot);
+            }
+        }
+
+        public void Dispose()
+        {
+            _messageQueue.Dispose();
+        }
+    }
+}

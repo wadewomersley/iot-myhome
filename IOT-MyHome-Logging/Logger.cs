@@ -1,6 +1,7 @@
 ﻿namespace IOT_MyHome.Logging
 {
     using Microsoft.Extensions.Logging;
+    using Microsoft.Extensions.Logging.Console;
     using System;
     using System.Collections.Concurrent;
 
@@ -27,9 +28,9 @@
         static Logger()
         {
 #if DEBUG
-            LoggerFactory.AddConsole(LogLevel.Debug, true);
+            LoggerFactory.AddProvider(new CustomConsoleLoggerProvider((n, l) => l >= LogLevel.Debug, true));
 #else
-            LoggerFactory.AddConsole(LogLevel.Information, true);
+            LoggerFactory.AddProvider(new ConsoleLoggerProvider((n, l) => l >= LogLevel.Information, true));
 #endif
         }
 
