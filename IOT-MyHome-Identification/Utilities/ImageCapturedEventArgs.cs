@@ -4,13 +4,11 @@
 
     class ImageCapturedEventArgs : EventArgs
     {
-        public byte[] ImageBmp { get; private set; }
-        public byte[] ImagePng { get; private set; }
+        public byte[] ImageJpg { get; private set; }
 
-        public ImageCapturedEventArgs(byte[] imageBmp, byte[] imagePng)
+        public ImageCapturedEventArgs(byte[] imageJpg)
         {
-            this.ImageBmp = imageBmp;
-            this.ImagePng = imagePng;
+            this.ImageJpg = imageJpg;
         }
     }
 }

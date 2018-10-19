@@ -16,18 +16,18 @@
     {
         private IAmazonRekognition Rekognition;
         private ILogger Logger;
-        private Camera Camera;
+        private ICamera Camera;
         private Manager Manager;
 
         private byte[] LastImage = null;
-        private long IgnoreUntil = 0;
+        private float IgnoreUntil = 0;
 
-        public byte[] LastImageCapturedPng
+        public byte[] LastImageCapturedJpg
         {
             get; private set;
         }
 
-        public FacialRecognition(Manager manager, Camera camera)
+        public FacialRecognition(Manager manager, ICamera camera)
         {
             this.Logger = Logging.Logger.GetLogger<FacialRecognition>();
             this.Camera = camera;
@@ -77,17 +77,17 @@
 
         private void Camera_ImageCaptured(object sender, ImageCapturedEventArgs e)
         {
-            if ((new DateTimeOffset(DateTime.UtcNow)).ToUnixTimeSeconds() < IgnoreUntil)
+            if ((new DateTimeOffset(DateTime.UtcNow)).ToUnixTimeMilliseconds() < IgnoreUntil)
             {
                 this.Logger.LogDebug("Insufficient time since last match passed, ignoring");
                 return;
             }
 
-            var bitmap = e.ImageBmp;
+            this.Logger.LogDebug("Getting 640x480 image");
+            this.LastImageCapturedJpg = ImageHandling.ResizeImage(e.ImageJpg, 640, 480, FreeImageAPI.FREE_IMAGE_FORMAT.FIF_JPEG);
 
-            this.LastImageCapturedPng = e.ImagePng;
-
-            var newImage = ImageHandling.ResizeImage(bitmap, 32, 32);
+            this.Logger.LogDebug("Getting 32x32 image");
+            var newImage = ImageHandling.ResizeImage(e.ImageJpg, 32, 32);
             newImage = ImageHandling.AverageBitmapColors(newImage);
 
             if (LastImage == null)
@@ -100,6 +100,7 @@
 
             try
             {
+                this.Logger.LogDebug("Calculating image difference");
                 diff = ImageHandling.ImageDifference(LastImage, newImage);
             }
             catch (Exception ex)
@@ -108,14 +109,16 @@
                 return;
             }
 
-            if (diff < 25)
+            if (diff < 3)
             {
                 this.Logger.LogDebug("No changes detected, ignoring. {0}", diff);
                 LastImage = newImage;
                 return;
             }
 
-            using (var ms = new MemoryStream(e.ImagePng))
+            this.Logger.LogDebug("Image difference detected. {0}", diff);
+
+            using (var ms = new MemoryStream(e.ImageJpg))
             {
                 LastImage = newImage;
 
@@ -149,7 +152,14 @@
                         {
                             this.Logger.LogDebug("Seen person with no local information: {0}", match.Face.FaceId);
 
-                            this.AddDefaultPerson(match.Face, e.ImagePng);
+                            var bb = match.Face.BoundingBox;
+                            this.Manager.AddPerson(new Person()
+                            {
+                                Name = "(unknown)",
+                                SpokenName = "someone",
+                                RemoteIDs = new List<string>() { match.Face.FaceId },
+                                Image = ImageHandling.CropImage(e.ImageJpg, (uint)bb.Left, (uint)bb.Top, (uint)bb.Width, (uint)bb.Height)
+                            });
 
                             return;
                         }
@@ -175,47 +185,18 @@
                     {
                         this.Logger.LogDebug("Recognised new person with remote ID {0}", faceRecord.Face.FaceId);
 
-                        this.AddDefaultPerson(faceRecord.Face, e.ImagePng);
+                        var bb = faceRecord.Face.BoundingBox;
+                        this.Manager.AddPerson(new Person()
+                        {
+                            Name = "(unknown)",
+                            SpokenName = "someone",
+                            RemoteIDs = new List<string>() { faceRecord.Face.FaceId },
+                            Image = ImageHandling.CropImage(e.ImageJpg, (uint)bb.Left, (uint)bb.Top, (uint)bb.Width, (uint)bb.Height)
+                        });
                     });
                 }
 
-                IgnoreUntil = (new DateTimeOffset(DateTime.UtcNow)).ToUnixTimeSeconds() + (this.Manager.GetSleepAfterMatchInterval() / 1000);
-            }
-        }
-
-        private void AddDefaultPerson(Face face, byte[] pngImage)
-        {
-
-            using (var outMs = new MemoryStream())
-            {
-                using (var ms = new MemoryStream(pngImage))
-                {
-                    var imageObject = FreeImageAPI.FreeImageBitmap.FromStream(ms);
-                    var left = (int)(face.BoundingBox.Left * imageObject.Width);
-                    var top = (int)(face.BoundingBox.Top * imageObject.Height);
-                    var width = (int)(face.BoundingBox.Width * imageObject.Width);
-                    var height = (int)(face.BoundingBox.Height * imageObject.Height);
-
-                    var right = Math.Max(0, imageObject.Width - width - left);
-                    var bottom = Math.Max(0, imageObject.Height - height - top);
-                    left = Math.Max(0, left);
-                    top = Math.Max(0, top);
-
-                    var faceImage = imageObject.Copy(left, top, right, bottom);
-                    faceImage.Save(outMs, FreeImageAPI.FREE_IMAGE_FORMAT.FIF_PNG);
-                }
-                outMs.Seek(0, SeekOrigin.Begin);
-
-                var buffer = new byte[outMs.Length];
-                outMs.Read(buffer, 0, (int)outMs.Length);
-
-                this.Manager.AddPerson(new Person()
-                {
-                    Name = "(unknown)",
-                    SpokenName = "someone",
-                    RemoteIDs = new List<string>() { face.FaceId },
-                    Image = buffer
-                });
+                IgnoreUntil = (new DateTimeOffset(DateTime.UtcNow)).ToUnixTimeMilliseconds() + this.Manager.GetSleepAfterMatchInterval();
             }
         }
     }

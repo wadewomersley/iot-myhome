@@ -9,6 +9,7 @@
     <StartupObject>IOT_MyHome.Program</StartupObject>
     <AssemblyName>IOT_MyHome</AssemblyName>
     <RunPostBuildEvent>Always</RunPostBuildEvent>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

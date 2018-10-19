@@ -155,6 +155,15 @@
                 }
 
                 Logger.LogDebug("Ignoring file {0} due to exception {1}: {2}", pluginFile, ex.GetType(), ex.Message);
+
+                if (ex is ReflectionTypeLoadException)
+                {
+                    var exceptions = ((ReflectionTypeLoadException)ex).LoaderExceptions;
+                    foreach(var exception in exceptions)
+                    {
+                        Logger.LogDebug("{0}: {1}", exception.GetType(), exception.Message);
+                    }
+                }
             }
 
             return null;

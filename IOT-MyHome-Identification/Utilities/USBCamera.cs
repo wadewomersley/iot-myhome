@@ -5,7 +5,7 @@
     using System.Threading;
     using System.Threading.Tasks;
 
-    class Camera
+    internal class USBCamera : ICamera
     {
         public event EventHandler<ImageCapturedEventArgs> ImageCaptured;
 
@@ -14,7 +14,7 @@
         private ManualResetEvent Trigger = new ManualResetEvent(false);
         public bool Running { get; private set; } = false;
 
-        public Camera(int captureInterval)
+        public USBCamera(int captureInterval)
         {
             this.CaptureInterval = captureInterval;
 
@@ -52,9 +52,8 @@
                     break;
                 }
 
-                var bmp = image.ToBytes(".bmp");
-                var png = image.ToBytes(".png");
-                this.ImageCaptured?.Invoke(this, new ImageCapturedEventArgs(bmp, png));
+                var jpg = image.ToBytes(".jpg");
+                this.ImageCaptured?.Invoke(this, new ImageCapturedEventArgs(jpg));
 
                 Thread.Sleep(this.CaptureInterval);
             }

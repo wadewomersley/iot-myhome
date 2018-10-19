@@ -32,7 +32,7 @@
         private Manager Manager;
 
         private RequestController Controller;
-        private Camera Camera;
+        private ICamera Camera;
         private FacialRecognition Recognition;
 
         /// <summary>
@@ -44,7 +44,7 @@
         {
             Manager = new Manager(settingsManager);
             StaticContentHandler = new StaticContentProvider(pluginPath.TrimEnd('/') + "/IOT-MyHome-Identification-Assets");
-            Camera = new Camera(Manager.GetCaptureInterval());
+            Camera = new PiCamera(Manager.GetCaptureInterval());
             Recognition = new FacialRecognition(Manager, this.Camera);
             Controller = new RequestController(Manager, Recognition);
         }
