@@ -55,7 +55,7 @@
         {
             string[] plugins = Directory.GetFiles(".", "*.dll", SearchOption.AllDirectories);
 
-            var ignoreTest = new Regex("((Microsoft|System|Newtonsoft|SharpCompress)\\.)", RegexOptions.Compiled);
+            var ignoreTest = new Regex("((MMALSharp|Microsoft|System|Newtonsoft|SharpCompress|AWSSDK)\\.|(^lib)|(/lib)|(dll[^w]+x))", RegexOptions.Compiled);
 
             plugins = plugins.Where(name => !ignoreTest.IsMatch(name)).ToArray();
 
