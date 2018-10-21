@@ -1,6 +1,8 @@
 ﻿namespace IOT_MyHome.Identification.Utilities
 {
     using FreeImageAPI;
+    using IOT_MyHome.Logging;
+    using Microsoft.Extensions.Logging;
     using System;
     using System.IO;
 
@@ -76,7 +78,7 @@
         {
             using (var memStream = new MemoryStream(data))
             {
-                using (var img = new FreeImageAPI.FreeImageBitmap(memStream))
+                using (var img = new FreeImageBitmap(memStream))
                 {
                     img.Save(filename);
                 }
@@ -93,17 +95,24 @@
         /// <returns></returns>
         public static byte[] ResizeImage(byte[] image, uint width, uint height, FREE_IMAGE_FORMAT format = FREE_IMAGE_FORMAT.FIF_BMP)
         {
-            using (var memStream = new MemoryStream(image))
+            try
             {
-                using (var img = new FreeImageAPI.FreeImageBitmap(memStream))
+                using (var memStream = new MemoryStream(image))
                 {
-                    img.Rescale((int)width, (int)height, FreeImageAPI.FREE_IMAGE_FILTER.FILTER_BILINEAR);
-                    using (var outStream = new MemoryStream())
+                    using (var img = new FreeImageBitmap(memStream))
                     {
-                        img.Save(outStream, format);
-                        return outStream.ToArray();
+                        img.Rescale((int)width, (int)height, FreeImageAPI.FREE_IMAGE_FILTER.FILTER_BILINEAR);
+                        using (var outStream = new MemoryStream())
+                        {
+                            img.Save(outStream, format);
+                            return outStream.ToArray();
+                        }
                     }
                 }
+            }
+            catch (Exception)
+            {
+                return null;
             }
         }
 
@@ -118,19 +127,26 @@
         /// <returns></returns>
         public static byte[] CropImage(byte[] image, uint top, uint left, uint width, uint height)
         {
-            using (var memStream = new MemoryStream(image))
+            try
             {
-                using (var img = new FreeImageBitmap(memStream))
+                using (var memStream = new MemoryStream(image))
                 {
-                    using (var cropped = img.Copy((int)left, (int)top, img.Width - (int)left - (int)width, img.Height - (int)top - (int)height))
+                    using (var img = new FreeImageBitmap(memStream))
                     {
-                        using (var outStream = new MemoryStream())
+                        using (var cropped = img.Copy((int)left, (int)top, img.Width - (int)left - (int)width, img.Height - (int)top - (int)height))
                         {
-                            cropped.Save(outStream, FreeImageAPI.FREE_IMAGE_FORMAT.FIF_JPEG);
-                            return outStream.ToArray();
+                            using (var outStream = new MemoryStream())
+                            {
+                                cropped.Save(outStream, FreeImageAPI.FREE_IMAGE_FORMAT.FIF_JPEG);
+                                return outStream.ToArray();
+                            }
                         }
                     }
                 }
+            }
+            catch (Exception)
+            {
+                return null;
             }
         }
     }

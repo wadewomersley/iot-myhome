@@ -11,6 +11,7 @@
     using System.Linq;
     using System.IO;
     using Microsoft.Extensions.Logging;
+    using FreeImageAPI;
 
     internal class FacialRecognition
     {
@@ -56,12 +57,12 @@
             {
                 foreach (var ex in exs.InnerExceptions)
                 {
-                    this.Logger.LogCritical(ex.Message);
+                    this.Logger.LogCritical(ex.Message + ex.StackTrace);
                 }
             }
             catch (Exception ex)
             {
-                this.Logger.LogCritical(ex.Message);
+                this.Logger.LogCritical(ex.Message + ex.StackTrace);
             }
 
             try
@@ -71,7 +72,7 @@
             }
             catch (Exception ex)
             {
-                this.Logger.LogCritical(ex.Message);
+                this.Logger.LogCritical(ex.Message + ex.StackTrace);
             }
         }
 
@@ -83,122 +84,129 @@
                 return;
             }
 
-            this.Logger.LogDebug("Getting 640x480 image");
-            this.LastImageCapturedJpg = ImageHandling.ResizeImage(e.ImageJpg, 640, 480, FreeImageAPI.FREE_IMAGE_FORMAT.FIF_JPEG);
-
-            this.Logger.LogDebug("Getting 32x32 image");
-            var newImage = ImageHandling.ResizeImage(e.ImageJpg, 32, 32);
-            newImage = ImageHandling.AverageBitmapColors(newImage);
-
-            if (LastImage == null)
-            {
-                LastImage = newImage;
-                return;
-            }
-
-            double diff;
-
             try
             {
-                this.Logger.LogDebug("Calculating image difference");
-                diff = ImageHandling.ImageDifference(LastImage, newImage);
-            }
-            catch (Exception ex)
-            {
-                Logger.LogError(ex.Message);
-                return;
-            }
+                this.Logger.LogDebug("Resizing image for diff");
 
-            if (diff < 3)
-            {
-                this.Logger.LogDebug("No changes detected, ignoring. {0}", diff);
-                LastImage = newImage;
-                return;
-            }
+                var newImage = ImageHandling.ResizeImage(e.ImageJpg, 32, 32);
+                newImage = ImageHandling.AverageBitmapColors(newImage);
 
-            this.Logger.LogDebug("Image difference detected. {0}", diff);
-
-            using (var ms = new MemoryStream(e.ImageJpg))
-            {
-                LastImage = newImage;
-
-                this.Logger.LogDebug("Sending image to Rekognition");
-
-                var searchRequest = new SearchFacesByImageRequest();
-                searchRequest.CollectionId = this.Manager.GetAmazonRekognitionCollection();
-                searchRequest.Image = new Image() { Bytes = ms };
-                searchRequest.FaceMatchThreshold = this.Manager.GetRequiredSimilary();
-                SearchFacesByImageResponse result;
+                if (LastImage == null)
+                {
+                    LastImage = newImage;
+                    return;
+                }
+                
+                double diff;
 
                 try
                 {
-                    result = this.Rekognition.SearchFacesByImageAsync(searchRequest).Result;
+                    this.Logger.LogDebug("Calculating image difference");
+                    diff = ImageHandling.ImageDifference(LastImage, newImage);
                 }
-                catch (AggregateException ex)
+                catch (Exception ex)
                 {
-                    if (ex.InnerException is InvalidParameterException)
+                    Logger.LogError(ex.Message);
+                    return;
+                }
+
+                this.LastImageCapturedJpg = ImageHandling.ResizeImage(e.ImageJpg, 640, 480, FreeImageAPI.FREE_IMAGE_FORMAT.FIF_JPEG);
+
+                if (diff < 5)
+                {
+                    this.Logger.LogDebug("No changes detected, ignoring. {0}", diff);
+                    LastImage = newImage;
+                    return;
+                }
+
+                this.Logger.LogDebug("Image difference detected. {0}", diff);
+
+                using (var ms = new MemoryStream(e.ImageJpg))
+                {
+                    LastImage = newImage;
+
+                    this.Logger.LogDebug("Sending image to Rekognition");
+
+                    var searchRequest = new SearchFacesByImageRequest();
+                    searchRequest.CollectionId = this.Manager.GetAmazonRekognitionCollection();
+                    searchRequest.Image = new Image() { Bytes = ms };
+                    searchRequest.FaceMatchThreshold = this.Manager.GetRequiredSimilary();
+                    SearchFacesByImageResponse result;
+
+                    try
                     {
-                        return;
+                        result = this.Rekognition.SearchFacesByImageAsync(searchRequest).Result;
+                    }
+                    catch (AggregateException ex)
+                    {
+                        if (ex.InnerException is InvalidParameterException)
+                        {
+                            return;
+                        }
+
+                        throw;
                     }
 
-                    throw;
-                }
-
-                if (result.FaceMatches.Count > 0)
-                {
-                    result.FaceMatches.ForEach((match) =>
+                    if (result.FaceMatches.Count > 0)
                     {
-                        var matchingPerson = this.Manager.GetPerson(match.Face.FaceId);
-
-                        if (matchingPerson == null)
+                        result.FaceMatches.ForEach((match) =>
                         {
-                            this.Logger.LogDebug("Seen person with no local information: {0}", match.Face.FaceId);
+                            var matchingPerson = this.Manager.GetPerson(match.Face.FaceId);
 
-                            var bb = match.Face.BoundingBox;
+                            if (matchingPerson == null)
+                            {
+                                this.Logger.LogDebug("Seen person with no local information: {0}", match.Face.FaceId);
+
+                                var bb = match.Face.BoundingBox;
+                                this.Manager.AddPerson(new Person()
+                                {
+                                    Name = "(unknown)",
+                                    SpokenName = "someone",
+                                    RemoteIDs = new List<string>() { match.Face.FaceId },
+                                    Image = ImageHandling.CropImage(e.ImageJpg, (uint)bb.Left, (uint)bb.Top, (uint)bb.Width, (uint)bb.Height)
+                                });
+
+                                return;
+                            }
+
+                            this.Logger.LogDebug("Seen {0}", matchingPerson.Name);
+
+                            //Investigate the mood
+                            var r2 = new DetectFacesRequest();
+                            r2.Attributes = new List<string>() { "ALL" };
+                            r2.Image = new Image() { Bytes = ms };
+                        });
+                    }
+                    else
+                    {
+                        ms.Seek(0, SeekOrigin.Begin);
+                        var recognise = new IndexFacesRequest();
+                        recognise.CollectionId = this.Manager.GetAmazonRekognitionCollection();
+                        recognise.Image = new Image() { Bytes = ms };
+                        var indexResult = this.Rekognition.IndexFacesAsync(recognise).Result;
+
+                        indexResult.FaceRecords.ForEach((faceRecord) =>
+                        {
+                            this.Logger.LogDebug("Recognised new person with remote ID {0}", faceRecord.Face.FaceId);
+
+                            var bb = faceRecord.Face.BoundingBox;
                             this.Manager.AddPerson(new Person()
                             {
                                 Name = "(unknown)",
                                 SpokenName = "someone",
-                                RemoteIDs = new List<string>() { match.Face.FaceId },
+                                RemoteIDs = new List<string>() { faceRecord.Face.FaceId },
                                 Image = ImageHandling.CropImage(e.ImageJpg, (uint)bb.Left, (uint)bb.Top, (uint)bb.Width, (uint)bb.Height)
                             });
-
-                            return;
-                        }
-
-                        this.Logger.LogDebug("Seen {0}", matchingPerson.Name);
-
-                        //Investigate the mood
-                        var r2 = new DetectFacesRequest();
-                        r2.Attributes = new List<string>() { "ALL" };
-                        r2.Image = new Image() { Bytes = ms };
-                    });
-                }
-                else
-                {
-                    ms.Seek(0, SeekOrigin.Begin);
-                    var recognise = new IndexFacesRequest();
-                    recognise.CollectionId = this.Manager.GetAmazonRekognitionCollection();
-                    recognise.Image = new Image() { Bytes = ms };
-                    var indexResult = this.Rekognition.IndexFacesAsync(recognise).Result;
-
-                    indexResult.FaceRecords.ForEach((faceRecord) =>
-                    {
-                        this.Logger.LogDebug("Recognised new person with remote ID {0}", faceRecord.Face.FaceId);
-
-                        var bb = faceRecord.Face.BoundingBox;
-                        this.Manager.AddPerson(new Person()
-                        {
-                            Name = "(unknown)",
-                            SpokenName = "someone",
-                            RemoteIDs = new List<string>() { faceRecord.Face.FaceId },
-                            Image = ImageHandling.CropImage(e.ImageJpg, (uint)bb.Left, (uint)bb.Top, (uint)bb.Width, (uint)bb.Height)
                         });
-                    });
+                    }
                 }
-
-                IgnoreUntil = (new DateTimeOffset(DateTime.UtcNow)).ToUnixTimeMilliseconds() + this.Manager.GetSleepAfterMatchInterval();
             }
+            catch (Exception)
+            {
+                return;
+            }
+
+            IgnoreUntil = (new DateTimeOffset(DateTime.UtcNow)).ToUnixTimeMilliseconds() + this.Manager.GetSleepAfterMatchInterval();
         }
     }
 }

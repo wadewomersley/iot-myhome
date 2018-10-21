@@ -17,13 +17,21 @@
   <ItemGroup>
     <PackageReference Include="AWSSDK.Rekognition" Version="3.3.11.5" />
     <PackageReference Include="FreeImage-dotnet-core" Version="4.3.6" />
-    <PackageReference Include="MMALSharp" Version="0.4.4" />
     <PackageReference Include="OpenCvSharp3-AnyCPU" Version="3.4.1.20180830" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\IOT-MyHome-Plugins\IOT-MyHome-Plugins.csproj" />
     <ProjectReference Include="..\IOT-MyHome-Settings\IOT-MyHome-Settings.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="MMALSharp">
+      <HintPath>..\..\MMALSharp\src\MMALSharp\bin\Debug\netstandard2.0\MMALSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="MMALSharp.Common">
+      <HintPath>..\..\MMALSharp\src\MMALSharp\bin\Debug\netstandard2.0\MMALSharp.Common.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <ItemGroup>
