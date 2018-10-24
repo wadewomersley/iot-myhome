@@ -61,7 +61,7 @@
                 {
                     var tl = new Timelapse { Mode = TimelapseMode.Millisecond, CancellationToken = Source.Token, Value = this.CaptureInterval };
                     Logger.GetLogger<PiCamera>().LogDebug("Starting TakePictureTimelapse");
-                    await camera.TakePictureTimelapse(imgCaptureHandler, MMALEncoding.JPEG, MMALEncoding.I420, tl);
+                    await camera.TakePictureTimelapse(imgCaptureHandler, MMALEncoding.JPEG, MMALEncoding.JPEG, tl);
                 }
             }
             catch (Exception ex)
