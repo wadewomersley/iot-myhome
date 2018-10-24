@@ -88,7 +88,7 @@
             {
                 this.Logger.LogDebug("Resizing image for diff");
 
-                var newImage = ImageHandling.ResizeImage(e.ImageJpg, 48, 36);
+                var newImage = ImageHandling.ResizeImage(e.ImageJpg, 32, 32);
                 newImage = ImageHandling.AverageBitmapColors(newImage);
 
                 if (LastImage == null)
