@@ -11,11 +11,11 @@
 
         public List<Person> People { get; set; } = new List<Person>();
 
-        public int SleepInterval { get; set; } = 1000;
+        public int SleepInterval { get; set; } = 300;
 
-        public int SleepAfterMatchInterval { get; set; } = 5000;
+        public int SleepAfterMatchInterval { get; set; } = 2500;
 
-        public int CaptureInterval { get; set; } = 1000;
+        public int CaptureInterval { get; set; } = 300;
 
         public string AmazonRegion { get; set; } = "eu-west-1";
 

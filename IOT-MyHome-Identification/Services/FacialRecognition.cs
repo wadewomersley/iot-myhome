@@ -78,10 +78,15 @@
 
         private void Camera_ImageCaptured(object sender, ImageCapturedEventArgs e)
         {
-            if ((new DateTimeOffset(DateTime.UtcNow)).ToUnixTimeMilliseconds() < IgnoreUntil)
+            lock (Manager)
             {
-                this.Logger.LogDebug("Insufficient time since last match passed, ignoring");
-                return;
+                if ((new DateTimeOffset(DateTime.UtcNow)).ToUnixTimeMilliseconds() < IgnoreUntil)
+                {
+                    this.Logger.LogDebug("Insufficient time since last match passed, ignoring");
+                    return;
+                }
+
+                IgnoreUntil = (new DateTimeOffset(DateTime.UtcNow)).ToUnixTimeMilliseconds() + this.Manager.GetCaptureInterval();
             }
 
             try
@@ -112,7 +117,7 @@
 
                 this.LastImageCapturedJpg = ImageHandling.ResizeImage(e.ImageJpg, 640, 480, FreeImageAPI.FREE_IMAGE_FORMAT.FIF_JPEG);
 
-                if (diff < 5)
+                if (diff < 8)
                 {
                     this.Logger.LogDebug("No changes detected, ignoring. {0}", diff);
                     LastImage = newImage;
@@ -158,12 +163,14 @@
                                 this.Logger.LogDebug("Seen person with no local information: {0}", match.Face.FaceId);
 
                                 var bb = match.Face.BoundingBox;
+                                this.Logger.LogDebug("Cropping image using {0} {1} {2} {3}", bb.Left, bb.Top, bb.Width, bb.Height);
+
                                 this.Manager.AddPerson(new Person()
                                 {
                                     Name = "(unknown)",
                                     SpokenName = "someone",
                                     RemoteIDs = new List<string>() { match.Face.FaceId },
-                                    Image = ImageHandling.CropImage(e.ImageJpg, (uint)bb.Left, (uint)bb.Top, (uint)bb.Width, (uint)bb.Height)
+                                    Image = ImageHandling.CropImage(e.ImageJpg, bb.Left, bb.Top, bb.Width, bb.Height)
                                 });
 
                                 return;
@@ -195,7 +202,7 @@
                                 Name = "(unknown)",
                                 SpokenName = "someone",
                                 RemoteIDs = new List<string>() { faceRecord.Face.FaceId },
-                                Image = ImageHandling.CropImage(e.ImageJpg, (uint)bb.Left, (uint)bb.Top, (uint)bb.Width, (uint)bb.Height)
+                                Image = ImageHandling.CropImage(e.ImageJpg, bb.Left, bb.Top, bb.Width, bb.Height)
                             });
                         });
                     }

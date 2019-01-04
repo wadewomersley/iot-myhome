@@ -32,7 +32,7 @@
         public void Start()
         {
             this.Running = true;
-            Source = new CancellationTokenSource(TimeSpan.FromDays(24));
+            Source = new CancellationTokenSource();
             this.Capture.Start();
         }
 
@@ -60,7 +60,7 @@
                 using (var imgCaptureHandler = new CaptureHandler(ImageCaptured))
                 {
                     var tl = new Timelapse { Mode = TimelapseMode.Millisecond, CancellationToken = Source.Token, Value = this.CaptureInterval };
-                    Logger.GetLogger<PiCamera>().LogDebug("Starting TakePictureTimelapse");
+                    Logger.GetLogger<PiCamera>().LogDebug("Starting TakePictureTimelapse with an interval of {0}ms", this.CaptureInterval);
                     await camera.TakePictureTimelapse(imgCaptureHandler, MMALEncoding.JPEG, MMALEncoding.I420, tl);
                 }
             }
@@ -125,6 +125,8 @@
 
             if (buffer.Length > 0)
             {
+                Logger.GetLogger<PiCamera>().LogDebug("Triggering ImageCapturedEventArgs");
+                
                 this.ImageCaptured?.Invoke(this, new ImageCapturedEventArgs(buffer));
             }
         }

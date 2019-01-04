@@ -39,7 +39,7 @@
                     if (File.Exists("ssl.pfx"))
                     {
                         logger.LogInformation("Enabling HTTPS");
-                        options.Listen(IPAddress.Loopback, 16001, listenOptions =>
+                        options.Listen(IPAddress.Any, 16001, listenOptions =>
                         {
                             listenOptions.UseHttps("ssl.pfx", "PASSWORD");
                         });

@@ -125,7 +125,7 @@
         /// <param name="width"></param>
         /// <param name="height"></param>
         /// <returns></returns>
-        public static byte[] CropImage(byte[] image, uint top, uint left, uint width, uint height)
+        public static byte[] CropImage(byte[] image, float top, float left, float width, float height)
         {
             try
             {
@@ -133,7 +133,12 @@
                 {
                     using (var img = new FreeImageBitmap(memStream))
                     {
-                        using (var cropped = img.Copy((int)left, (int)top, img.Width - (int)left - (int)width, img.Height - (int)top - (int)height))
+                        int realLeft = (int)(img.Width * left);
+                        int realTop = (int)(img.Height * top);
+                        int realWidth = (int)(img.Width * width);
+                        int realHeight = (int)(img.Height * height);
+
+                        using (var cropped = img.Copy((int)realLeft, (int)realTop, img.Width - (int)realLeft - (int)realWidth, img.Height - (int)realTop - (int)realHeight))
                         {
                             using (var outStream = new MemoryStream())
                             {

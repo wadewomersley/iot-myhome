@@ -33,6 +33,7 @@
     <ProjectReference Include="..\IOT-MyHome-Identification\IOT-MyHome-Identification.csproj" />
     <ProjectReference Include="..\IOT-MyHome-Logging\IOT-MyHome-Logging.csproj" />
     <ProjectReference Include="..\IOT-MyHome-Plugins\IOT-MyHome-Plugins.csproj" />
+    <ProjectReference Include="..\IOT-MyHome-RunCommand\IOT-MyHome-RunCommand.csproj" />
     <ProjectReference Include="..\IOT-MyHome-Settings\IOT-MyHome-Settings.csproj" />
     <ProjectReference Include="..\IOT-MyHome-Weather\IOT-MyHome-Weather.csproj" />
   </ItemGroup>
