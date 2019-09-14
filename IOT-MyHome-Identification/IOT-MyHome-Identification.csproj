@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
@@ -15,9 +15,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AWSSDK.Rekognition" Version="3.3.11.5" />
+    <PackageReference Include="AWSSDK.Rekognition" Version="3.3.101.13" />
     <PackageReference Include="FreeImage-dotnet-core" Version="4.3.6" />
-    <PackageReference Include="OpenCvSharp3-AnyCPU" Version="3.4.1.20180830" />
+    <PackageReference Include="OpenCvSharp4" Version="4.1.0.20190416" />
+    <PackageReference Include="OpenCvSharp4.runtime.ubuntu.18.04-x64" Version="4.1.0.20190416" />
   </ItemGroup>
 
   <ItemGroup>
@@ -46,6 +47,9 @@
     </None>
     <None Update="Assets\js\debug.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="haarcascade_frontalface_alt2.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 </Project>

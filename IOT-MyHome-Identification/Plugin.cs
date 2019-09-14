@@ -44,7 +44,7 @@
         {
             Manager = new Manager(settingsManager);
             StaticContentHandler = new StaticContentProvider(pluginPath.TrimEnd('/') + "/IOT-MyHome-Identification-Assets");
-            Camera = new PiCamera(Manager.GetCaptureInterval());
+            Camera = new USBCamera(Manager.GetCaptureInterval());
             Recognition = new FacialRecognition(Manager, this.Camera);
             Controller = new RequestController(Manager, Recognition);
         }

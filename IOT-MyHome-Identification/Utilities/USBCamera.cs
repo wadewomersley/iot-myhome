@@ -9,9 +9,10 @@
     {
         public event EventHandler<ImageCapturedEventArgs> ImageCaptured;
 
-        public int CaptureInterval { get; set; } = 1000;
+        public int CaptureInterval { get; set; } = 300;
         private Task Capture;
-        private ManualResetEvent Trigger = new ManualResetEvent(false);
+        private CascadeClassifier Classifier;
+
         public bool Running { get; private set; } = false;
 
         public USBCamera(int captureInterval)
@@ -20,40 +21,47 @@
 
             this.Capture = new Task(TakeShot, TaskCreationOptions.LongRunning);
             this.Capture.Start();
+
+
+            this.Classifier = new CascadeClassifier("haarcascade_frontalface_alt2.xml");
         }
 
         public void Start()
         {
             this.Running = true;
-            this.Trigger.Set();
         }
 
         public void Stop()
         {
             this.Running = false;
-            this.Trigger.Reset();
         }
 
         private void TakeShot()
         {
-            var capture = new VideoCapture(0);
-            capture.Set(CaptureProperty.FrameWidth, 1280);
-            capture.Set(CaptureProperty.FrameHeight, 720);
+            var capture = VideoCapture.FromCamera(-1);
+            capture.Set(CaptureProperty.Fps, 5);
             var image = new Mat();
-
+            
             while (true)
             {
-                this.Trigger.WaitOne();
+                if (!this.Running)
+                {
+                    Thread.Sleep(100);
+                    continue;
+                }
 
                 capture.Read(image);
 
-                if (image.Width == 0)
+                if (image.Empty())
                 {
+                    Console.WriteLine("Empty image");
                     break;
                 }
 
+                var faces = this.Classifier.DetectMultiScale(image, 1.1, 5, HaarDetectionType.ScaleImage, new Size(30, 30));
+
                 var jpg = image.ToBytes(".jpg");
-                this.ImageCaptured?.Invoke(this, new ImageCapturedEventArgs(jpg));
+                this.ImageCaptured?.Invoke(this, new ImageCapturedEventArgs(jpg, faces.Length > 0));
 
                 Thread.Sleep(this.CaptureInterval);
             }

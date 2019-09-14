@@ -20,7 +20,6 @@
         private ICamera Camera;
         private Manager Manager;
 
-        private byte[] LastImage = null;
         private float IgnoreUntil = 0;
 
         public byte[] LastImageCapturedJpg
@@ -91,45 +90,15 @@
 
             try
             {
-                this.Logger.LogDebug("Resizing image for diff");
-
-                var newImage = ImageHandling.ResizeImage(e.ImageJpg, 32, 32);
-                newImage = ImageHandling.AverageBitmapColors(newImage);
-
-                if (LastImage == null)
-                {
-                    LastImage = newImage;
-                    return;
-                }
-                
-                double diff;
-
-                try
-                {
-                    this.Logger.LogDebug("Calculating image difference");
-                    diff = ImageHandling.ImageDifference(LastImage, newImage);
-                }
-                catch (Exception ex)
-                {
-                    Logger.LogError(ex.Message);
-                    return;
-                }
-
                 this.LastImageCapturedJpg = ImageHandling.ResizeImage(e.ImageJpg, 640, 480, FreeImageAPI.FREE_IMAGE_FORMAT.FIF_JPEG);
 
-                if (diff < 8)
+                if (!e.HasFaces)
                 {
-                    this.Logger.LogDebug("No changes detected, ignoring. {0}", diff);
-                    LastImage = newImage;
                     return;
                 }
-
-                this.Logger.LogDebug("Image difference detected. {0}", diff);
 
                 using (var ms = new MemoryStream(e.ImageJpg))
                 {
-                    LastImage = newImage;
-
                     this.Logger.LogDebug("Sending image to Rekognition");
 
                     var searchRequest = new SearchFacesByImageRequest();

@@ -6,9 +6,12 @@
     {
         public byte[] ImageJpg { get; private set; }
 
-        public ImageCapturedEventArgs(byte[] imageJpg)
+        public bool HasFaces { get; private set; }
+
+        public ImageCapturedEventArgs(byte[] imageJpg, bool hasFaces = false)
         {
             this.ImageJpg = imageJpg;
+            this.HasFaces = hasFaces;
         }
     }
 }
