@@ -51,30 +51,37 @@
         /// <returns></returns>
         public static byte[] CropImage(byte[] image, float top, float left, float width, float height)
         {
+            var logger = Logging.Logger.GetLogger<ImageHandling>();
+
             try
             {
                 using (var memStream = new MemoryStream(image))
                 {
                     using (var img = new FreeImageBitmap(memStream))
                     {
-                        int realLeft = (int)(img.Width * left);
-                        int realTop = (int)(img.Height * top);
-                        int realWidth = (int)(img.Width * width);
-                        int realHeight = (int)(img.Height * height);
+                        int realLeft = Math.Max(0, (int)(img.Width * left));
+                        int realTop = Math.Max(0, (int)(img.Height * top));
+                        int realWidth = Math.Max(0, (int)(img.Width * width));
+                        int realHeight = Math.Max(0, (int)(img.Height * height));
 
-                        using (var cropped = img.Copy((int)realLeft, (int)realTop, img.Width - (int)realLeft - (int)realWidth, img.Height - (int)realTop - (int)realHeight))
+                        int right = Math.Max(0, img.Width - realLeft - realWidth);
+                        int bottom = Math.Max(0, img.Height - realTop - realHeight);
+                        var time = DateTime.UtcNow.ToString("HHmmssffffff");
+
+                        using (var cropped = img.Copy(new System.Drawing.Rectangle(realLeft, realTop, realWidth, realHeight)))
                         {
                             using (var outStream = new MemoryStream())
                             {
-                                cropped.Save(outStream, FreeImageAPI.FREE_IMAGE_FORMAT.FIF_JPEG);
+                                cropped.Save(outStream, FREE_IMAGE_FORMAT.FIF_PNG);
                                 return outStream.ToArray();
                             }
                         }
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                logger.LogError("Unexpected error cropping image. {0}: {1}", ex.GetType().ToString(), ex.Message);
                 return null;
             }
         }

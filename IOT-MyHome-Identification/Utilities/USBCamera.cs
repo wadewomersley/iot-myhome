@@ -38,10 +38,16 @@
 
         private void TakeShot()
         {
-            var capture = VideoCapture.FromCamera(-1);
+            var capture = VideoCapture.FromCamera(0);
+            capture.Set(CaptureProperty.FrameWidth, 1280);
+            capture.Set(CaptureProperty.FrameHeight, 720);
             capture.Set(CaptureProperty.Fps, 5);
             var image = new Mat();
-            
+
+            var nextAllowed = new DateTime();
+            nextAllowed.Subtract(TimeSpan.FromSeconds(500));
+            var captureInterval = TimeSpan.FromSeconds(this.CaptureInterval);
+
             while (true)
             {
                 if (!this.Running)
@@ -52,18 +58,31 @@
 
                 capture.Read(image);
 
+                //@TODO: Sleep needs to capture.Read but then ignore until CaptureInterval reached due to buffer
+
                 if (image.Empty())
                 {
                     Console.WriteLine("Empty image");
                     break;
                 }
 
+                if (new DateTime() < nextAllowed)
+                {
+                    Thread.Sleep(100);
+                    continue;
+                }
+
+                
                 var faces = this.Classifier.DetectMultiScale(image, 1.1, 5, HaarDetectionType.ScaleImage, new Size(30, 30));
 
-                var jpg = image.ToBytes(".jpg");
-                this.ImageCaptured?.Invoke(this, new ImageCapturedEventArgs(jpg, faces.Length > 0));
+                var png = image.ToBytes(".png");
+                this.ImageCaptured?.Invoke(this, new ImageCapturedEventArgs(png, faces.Length > 0));
 
-                Thread.Sleep(this.CaptureInterval);
+                if (faces.Length > 0)
+                {
+                    nextAllowed = new DateTime();
+                    nextAllowed.Add(captureInterval);
+                }
             }
         }
     }

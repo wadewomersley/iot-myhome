@@ -8,3 +8,23 @@ body {
     display: block;
     margin: 0 auto;
 }
+
+#people {
+}
+
+    #people .person {
+        float: left;
+        width: 200px;
+        padding: 10px;
+        margin: 10px;
+    }
+
+        #people .person .image {
+            max-width: 200px;
+            display: block;
+            margin: 0 auto;
+        }
+
+        #people .person .name {
+            text-align: center;
+        }

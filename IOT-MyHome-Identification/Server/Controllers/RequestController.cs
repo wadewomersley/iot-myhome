@@ -53,11 +53,11 @@
             return await Task.Run(() => {
                 Logger.LogDebug("Getting last image captured");
 
-                var base64Image = "data:image/jpg;base64,";
+                var base64Image = "data:image/png;base64,";
 
-                if (Recognition.LastImageCapturedJpg != null && Recognition.LastImageCapturedJpg.Length > 0)
+                if (Recognition.LastImageCapturedPng != null && Recognition.LastImageCapturedPng.Length > 0)
                 {
-                    base64Image += Convert.ToBase64String(Recognition.LastImageCapturedJpg);
+                    base64Image += Convert.ToBase64String(Recognition.LastImageCapturedPng);
                 }
 
                 return new Response(base64Image);

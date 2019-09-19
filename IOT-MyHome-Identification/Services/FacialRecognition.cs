@@ -22,7 +22,7 @@
 
         private float IgnoreUntil = 0;
 
-        public byte[] LastImageCapturedJpg
+        public byte[] LastImageCapturedPng
         {
             get; private set;
         }
@@ -90,14 +90,14 @@
 
             try
             {
-                this.LastImageCapturedJpg = ImageHandling.ResizeImage(e.ImageJpg, 640, 480, FreeImageAPI.FREE_IMAGE_FORMAT.FIF_JPEG);
+                this.LastImageCapturedPng = ImageHandling.ResizeImage(e.ImagePng, 640, 480, FreeImageAPI.FREE_IMAGE_FORMAT.FIF_PNG);
 
                 if (!e.HasFaces)
                 {
                     return;
                 }
 
-                using (var ms = new MemoryStream(e.ImageJpg))
+                using (var ms = new MemoryStream(e.ImagePng))
                 {
                     this.Logger.LogDebug("Sending image to Rekognition");
 
@@ -132,14 +132,14 @@
                                 this.Logger.LogDebug("Seen person with no local information: {0}", match.Face.FaceId);
 
                                 var bb = match.Face.BoundingBox;
-                                this.Logger.LogDebug("Cropping image using {0} {1} {2} {3}", bb.Left, bb.Top, bb.Width, bb.Height);
+                                this.Logger.LogDebug("Cropping image using {0} {1} {2} {3}", bb.Top, bb.Left, bb.Width, bb.Height);
 
                                 this.Manager.AddPerson(new Person()
                                 {
                                     Name = "(unknown)",
                                     SpokenName = "someone",
                                     RemoteIDs = new List<string>() { match.Face.FaceId },
-                                    Image = ImageHandling.CropImage(e.ImageJpg, bb.Left, bb.Top, bb.Width, bb.Height)
+                                    Image = ImageHandling.CropImage(e.ImagePng, bb.Top, bb.Left, bb.Width, bb.Height)
                                 });
 
                                 return;
@@ -171,14 +171,15 @@
                                 Name = "(unknown)",
                                 SpokenName = "someone",
                                 RemoteIDs = new List<string>() { faceRecord.Face.FaceId },
-                                Image = ImageHandling.CropImage(e.ImageJpg, bb.Left, bb.Top, bb.Width, bb.Height)
+                                Image = ImageHandling.CropImage(e.ImagePng, bb.Top, bb.Left, bb.Width, bb.Height)
                             });
                         });
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                this.Logger.LogError("Unexpected error {0}: {1}", ex.GetType().ToString(), ex.Message);
                 return;
             }
 

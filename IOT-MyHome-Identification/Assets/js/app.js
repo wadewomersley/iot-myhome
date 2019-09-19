@@ -13,18 +13,32 @@
     var getImage = function () {
         getData('lastImageCaptured').then(function (image) {
             $('#lastImage').attr('src', image);
-            nextImage = window.setTimeout(getImage, 250);
+            nextImage = window.setTimeout(getImage, 200);
         });
     };
 
     getImage();
 
     getData('settings').then(function (settings) {
+        var peopleContainer = $('#people');
+
         for (var i = 0; i < settings.People.length; i++) {
             var person = settings.People[i];
-            $('<img/>')
-                .attr('src', 'data:image/jpg;base64,' + person.Image)
-                .appendTo($('#people'));
+
+            var personContainer = $('<div class="person"/>');
+
+            $('<img class="image"/>')
+                .attr('src', 'data:image/png;base64,' + person.Image)
+                .appendTo(personContainer);
+
+            $('<div class="name"/>')
+                .text(person.SpokeName || person.Name)
+                .appendTo(personContainer);
+
+            personContainer.appendTo(peopleContainer);
         }
+
+        $('<div style="clear: both"/>')
+            .appendTo(peopleContainer);
     });
 })();
