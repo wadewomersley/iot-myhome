@@ -11,6 +11,9 @@
     using System.IO;
     using System.Collections.Generic;
     using MMALSharp.Components;
+    using MMALSharp.Common.Utility;
+    using MMALSharp.Common;
+    using MMALSharp.Config;
 
     internal class PiCamera : ICamera, IDisposable
     {
@@ -45,11 +48,6 @@
         private async void TakeShot()
         {
             Logger.GetLogger<PiCamera>().LogDebug("Starting camera");
-
-            if(File.Exists("/dev/null"))
-            {
-                MMALLog.LogLocation = "/dev/null";
-            }
 
             var camera = MMALCamera.Instance;
             
@@ -100,13 +98,13 @@
             this.Stream = new MemoryStream();
         }
 
-        public override void Process(byte[] data)
+        public override void Process(ImageContext context)
         {
-            this.Processed += data.Length;
+            this.Processed += context.Data.Length;
 
             if (this.Stream.CanWrite)
             {
-                this.Stream.Write(data, 0, data.Length);
+                this.Stream.Write(context.Data, 0, context.Data.Length);
             }
             else
             {

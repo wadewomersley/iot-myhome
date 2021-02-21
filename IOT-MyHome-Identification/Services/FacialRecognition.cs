@@ -134,13 +134,18 @@
                                 var bb = match.Face.BoundingBox;
                                 this.Logger.LogDebug("Cropping image using {0} {1} {2} {3}", bb.Top, bb.Left, bb.Width, bb.Height);
 
-                                this.Manager.AddPerson(new Person()
+                                var img = ImageHandling.CropImage(e.ImagePng, bb.Top, bb.Left, bb.Width, bb.Height);
+                                if (img != null)
                                 {
-                                    Name = "(unknown)",
-                                    SpokenName = "someone",
-                                    RemoteIDs = new List<string>() { match.Face.FaceId },
-                                    Image = ImageHandling.CropImage(e.ImagePng, bb.Top, bb.Left, bb.Width, bb.Height)
-                                });
+
+                                    this.Manager.AddPerson(new Person()
+                                    {
+                                        Name = "(unknown)",
+                                        SpokenName = "someone",
+                                        RemoteIDs = new List<string>() { match.Face.FaceId },
+                                        Image = img
+                                    });
+                                }
 
                                 return;
                             }
@@ -166,13 +171,18 @@
                             this.Logger.LogDebug("Recognised new person with remote ID {0}", faceRecord.Face.FaceId);
 
                             var bb = faceRecord.Face.BoundingBox;
-                            this.Manager.AddPerson(new Person()
+                            var img = ImageHandling.CropImage(e.ImagePng, bb.Top, bb.Left, bb.Width, bb.Height);
+
+                            if (img != null)
                             {
-                                Name = "(unknown)",
-                                SpokenName = "someone",
-                                RemoteIDs = new List<string>() { faceRecord.Face.FaceId },
-                                Image = ImageHandling.CropImage(e.ImagePng, bb.Top, bb.Left, bb.Width, bb.Height)
-                            });
+                                this.Manager.AddPerson(new Person()
+                                {
+                                    Name = "(unknown)",
+                                    SpokenName = "someone",
+                                    RemoteIDs = new List<string>() { faceRecord.Face.FaceId },
+                                    Image = img
+                                });
+                            }
                         });
                     }
                 }

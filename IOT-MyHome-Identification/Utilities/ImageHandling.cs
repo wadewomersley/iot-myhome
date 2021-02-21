@@ -81,7 +81,7 @@
             }
             catch (Exception ex)
             {
-                logger.LogError("Unexpected error cropping image. {0}: {1}", ex.GetType().ToString(), ex.Message);
+                logger.LogError("Unexpected error cropping image. {0}: {1}.\n{2}", ex.GetType().ToString(), ex.Message, ex.StackTrace);
                 return null;
             }
         }

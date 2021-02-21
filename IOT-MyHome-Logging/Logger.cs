@@ -15,7 +15,7 @@
         /// <summary>
         /// Stores the logger factory
         /// </summary>
-        private static ILoggerFactory LoggerFactory { get; } = new LoggerFactory();
+        private static ILoggerFactory _LoggerFactory { get; } = new LoggerFactory();
 
         /// <summary>
         /// Stors a list of loggers
@@ -27,11 +27,14 @@
         /// </summary>
         static Logger()
         {
+            _LoggerFactory = LoggerFactory.Create(builder => {
 #if DEBUG
-            LoggerFactory.AddProvider(new CustomConsoleLoggerProvider((n, l) => l >= LogLevel.Debug, true));
+                builder.AddFilter(l => l >= LogLevel.Debug);
 #else
-            LoggerFactory.AddProvider(new ConsoleLoggerProvider((n, l) => l >= LogLevel.Information, true));
+                builder.AddFilter(l => l >= LogLevel.Information);
 #endif
+                builder.AddConsole();
+            });
         }
 
         /// <summary>
@@ -41,7 +44,7 @@
         /// <returns></returns>
         public static ILogger GetLogger<T>()
         {
-            Loggers.TryAdd(typeof(T), LoggerFactory.CreateLogger<T>());
+            Loggers.TryAdd(typeof(T), _LoggerFactory.CreateLogger<T>());
 
             return Loggers[typeof(T)];
         }

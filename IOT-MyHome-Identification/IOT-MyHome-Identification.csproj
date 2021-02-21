@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <AssemblyName>IOT_MyHome.Identification</AssemblyName>
     <RootNamespace>IOT_MyHome.Identification</RootNamespace>
     <Company>xcitestudios ltd</Company>
@@ -17,23 +17,16 @@
   <ItemGroup>
     <PackageReference Include="AWSSDK.Rekognition" Version="3.3.101.16" />
     <PackageReference Include="FreeImage-dotnet-core" Version="4.3.6" />
-    <PackageReference Include="OpenCvSharp4" Version="4.1.0.20190416" />
-    <PackageReference Include="OpenCvSharp4.runtime.ubuntu.18.04-x64" Version="4.1.0.20190416" />
-    <PackageReference Include="OpenCvSharp4.runtime.win" Version="4.1.0.20190416" />
+    <PackageReference Include="MMALSharp" Version="0.6.0" />
+    <PackageReference Include="MMALSharp.Common" Version="0.6.0" />
+    <PackageReference Include="OpenCvSharp4" Version="4.5.1.20210210" />
+    <PackageReference Include="OpenCvSharp4.runtime.ubuntu.18.04-x64" Version="4.5.1.20210210" />
+    <PackageReference Include="OpenCvSharp4.runtime.win" Version="4.5.1.20210210" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\IOT-MyHome-Plugins\IOT-MyHome-Plugins.csproj" />
     <ProjectReference Include="..\IOT-MyHome-Settings\IOT-MyHome-Settings.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="MMALSharp">
-      <HintPath>..\..\MMALSharp\src\MMALSharp\bin\Debug\netstandard2.0\MMALSharp.dll</HintPath>
-    </Reference>
-    <Reference Include="MMALSharp.Common">
-      <HintPath>..\..\MMALSharp\src\MMALSharp\bin\Debug\netstandard2.0\MMALSharp.Common.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
   <ItemGroup>

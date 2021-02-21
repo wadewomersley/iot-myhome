@@ -39,14 +39,15 @@
         private void TakeShot()
         {
             var capture = VideoCapture.FromCamera(0);
-            capture.Set(CaptureProperty.FrameWidth, 1280);
-            capture.Set(CaptureProperty.FrameHeight, 720);
-            capture.Set(CaptureProperty.Fps, 5);
+            capture.Set(VideoCaptureProperties.FrameWidth, 1280);
+            capture.Set(VideoCaptureProperties.FrameHeight, 720);
+            capture.Set(VideoCaptureProperties.Fps, 5);
             var image = new Mat();
 
-            var nextAllowed = new DateTime();
+            var nextAllowed = DateTime.UtcNow;
             nextAllowed.Subtract(TimeSpan.FromSeconds(500));
             var captureInterval = TimeSpan.FromSeconds(this.CaptureInterval);
+
 
             while (true)
             {
@@ -66,21 +67,21 @@
                     break;
                 }
 
-                if (new DateTime() < nextAllowed)
+                if (DateTime.UtcNow < nextAllowed)
                 {
                     Thread.Sleep(100);
                     continue;
                 }
 
                 
-                var faces = this.Classifier.DetectMultiScale(image, 1.1, 5, HaarDetectionType.ScaleImage, new Size(30, 30));
+                var faces = this.Classifier.DetectMultiScale(image, 1.1, 5, HaarDetectionTypes.ScaleImage, new Size(30, 30));
 
-                var png = image.ToBytes(".png");
+                var png = image.ToBytes(".png");        
                 this.ImageCaptured?.Invoke(this, new ImageCapturedEventArgs(png, faces.Length > 0));
 
                 if (faces.Length > 0)
                 {
-                    nextAllowed = new DateTime();
+                    nextAllowed = DateTime.UtcNow;
                     nextAllowed.Add(captureInterval);
                 }
             }
